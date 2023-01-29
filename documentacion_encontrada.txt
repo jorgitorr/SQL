@@ -1,0 +1,1 @@
+que dice que no se puede usar la clausula CURDATE() en un check(): https://stackoverflow.com/questions/55204218/how-to-use-curdate-in-check-clause
