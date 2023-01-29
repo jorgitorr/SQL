@@ -115,6 +115,7 @@ ALTER TABLE empleado MODIFY departamento NUMBER(4);
 */
 
 ALTER TABLE empleado ADD codigoDepart SMALLINT(4);
+/*NO FUNCIONA EL FOREIGN KEY (QUIZAS PORQUE YA LO TENGO)*/
 ALTER TABLE empleado ADD CONSTRAINT codDepart_fk FOREIGN KEY(codigoDepart) REFERENCES departamento(codigo);
 
 UPDATE empleado
@@ -127,7 +128,11 @@ WHERE departamento=3;
 
 UPDATE proyecto 
 SET presupuesto=100
-WHERE presupuesto=20
+WHERE presupuesto=20;
+
+UPDATE proyecto
+SET participantes="Joaquin"
+WHERE participantes="Vicente";
 
 /*
 6) Restricciones de clave ajena
@@ -138,7 +143,15 @@ WHERE presupuesto=20
 -Modificar la restricción de clave ajena anterior, para indicar que en caso de borrado establecer NULO y en caso de actualización establecer 'EN CASCADA' 
 -Establecer restricciones de clave ajena en la tabla 'Participa', de manera que tanto en el caso de borrado como actualización se realice 'EN CASCADA'
 */
+/*este ejercicio no se puede hacer sin agregar una columna que sea SMALLINT, la anterior vez era VARCHAR*/
+ALTER TABLE empleado ADD departamento SMALLINT(20);
+ALTER TABLE departamento ADD codigo SMALLINT(20);
+ALTER TABLE empleado ADD CONSTRAINT cod_fk FOREIGN KEY(departamento) REFERENCES departamento(codigo);/*NO FUNCIONA*/
 
+INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento, salario, departamento, codigo) VALUES(5,"Rodolfo","Contreras","Abichuela","6768327F","07-08-1996",786);
+
+INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento, salario, departamento, codigoDepart) VALUES(5,"Rodolfo","Contreras","Abichuela","6768327F","07-08-1996",500,786,345);
+/*me deja insertarlo porque no se me ha puesto como clave foranea*/
 /*
 7) Restricciones con nombre
 
