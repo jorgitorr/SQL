@@ -48,6 +48,8 @@ CREATE TABLE proyecto(
     fechaFinalizacion DATE NOT NULL CHECK(fechaFinalizacion>fechaInicio)
 );
 
+/**/
+
 /*NO DEJA HACER EL CHECK CON CURDATE(), ASI QUE ESE NO LO VOY A PONER*/
 
 ALTER TABLE proyecto ADD CONSTRAINT CHECK(presupuesto>0); 
@@ -68,14 +70,25 @@ CREATE TABLE participa(
 
 ALTER TABLE participa ADD CONSTRAINT CHECK(presupuesto>0);
 
-/*como he dicho no deja hacer check con curdate()*/
+
+
+
+/*EJERCICIOS*/
+/*primeras tuplas insertadas*/
+INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento,salario) VALUES(3,"Daniel","Casas","Rojas","7664567R","1996-13-01",786);
+INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento,salario) VALUES(9,"Pablo","Casado","Rojas","7664567R","1996-13-01",1021);
+INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento,salario) VALUES(6,"Paco","Casas","Rojas","7643567R","1996-13-01",1065);
+INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento,salario) VALUES(6,"Paco","Casas","Rojas","7643567R",'1996-13-01',834);
+INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento,salario) VALUES(16,"Kiko","Casas","Cuna","7643567R",'1996-13-01',865);
+INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento,salario) VALUES(21,"Roberto","Casas","Cuna","7643567R",'1928-13-12',1080);
+/*NO ME INSERTA LAS FECHAS QUE LE PONGO, SOLO ME PONE 0000000000*/
 
 INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento, salario) VALUES(1,"Manolo","Jimenez","Vega","4534534A",0000-00-00,4334);
 INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento, salario) VALUES(1,"Manolo","Jimenez","Vega","4534534A",0000-00-00,4334);
-/*lo raro es que si cambio la pk ya me lo acepta
-a pesar de que tengo como clave candidata un conjunto de valores que se repiten en este caso
 
 
+
+/*
 3) Borrar algún empleado, algún departamento, algún proyecto.
    ¿Hay alguna incoherencia con las tuplas de la tabla 'Participa'.
    Eliminar las tuplas de 'Participa' que sea necesario.
@@ -83,6 +96,9 @@ a pesar de que tengo como clave candidata un conjunto de valores que se repiten 
 DELETE FROM empleado WHERE(codigo>0);
 DELETE FROM departamento WHERE(nombre="ASIR");
 DELETE FROM proyecto WHERE(codigo>=3);
+
+
+
 
 /*
 4) Modificar las tablas anteriores:
@@ -151,19 +167,19 @@ ALTER TABLE empleado ADD CONSTRAINT cod_fk FOREIGN KEY(departamento) REFERENCES 
 INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento, salario, departamento, codigo) VALUES(5,"Rodolfo","Contreras","Abichuela","6768327F","07-08-1996",786);
 
 INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento, salario, departamento, codigoDepart) VALUES(5,"Rodolfo","Contreras","Abichuela","6768327F","07-08-1996",500,786,345);
+
+ALTER TABLE participa 
 /*me deja insertarlo porque no se me ha puesto como clave foranea*/
+
+
 /*
 7) Restricciones con nombre
-
 -Modificar todas las tablas para definir restricciones con nombre para todas las restricciones definidas en las tablas
-
-
-
 */
 
 
 
-/*tablas que he insertado para realizar los ejercicios*/
+/*tuplas que he insertado para realizar alguno ejercicios posteriores*/
 
 
 INSERT INTO departamento(nombre, descripcion, codigo)VALUES("DAM","Desarrollo de apps",587);
@@ -173,3 +189,4 @@ INSERT INTO departamento(nombre, descripcion, codigo)VALUES("DAW","Desarrollo we
 INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento, salario, departamento, codigoDepart) VALUES(2,"Paco","Jimenez","Sanchez","657563G",0000-00-00,4334, 3, 587);
 INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento, salario, departamento, codigoDepart) VALUES(3,"Gonzalo","Terminator","Ponce","4656456A",0000-00-00,4334, 4, 567);
 INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento, salario, departamento, codigoDepart) VALUES(4,"Jose","Ramirez","Vazquez","895612F",0000-00-00, 4334, 2, 564);
+
