@@ -45,18 +45,10 @@ CREATE TABLE proyecto(
     descripcion VARCHAR(100) NOT NULL,
     presupuesto SMALLINT(11) CHECK(presupuesto>0),
     fechaInicio DATE NOT NULL /*CHECK(fechaInicio >= CURDATE())*/,
-    fechaFinalizacion DATE NOT NULL CHECK(fechaFinalizacion>fechaInicio)
+    fechaFinalizacion DATE NOT NULL
 );
 
-/**/
-
-/*NO DEJA HACER EL CHECK CON CURDATE(), ASI QUE ESE NO LO VOY A PONER*/
-
-ALTER TABLE proyecto ADD CONSTRAINT CHECK(presupuesto>0); 
-
-/*
-no SE PUEDE HACER constraint de not null
-*/
+ALTER TABLE proyecto ADD CONSTRAINT CHECK(fechaInicio>=CURDATE()); 
 
 CREATE TABLE participa(
     empleado SMALLINT(5),
@@ -71,9 +63,8 @@ CREATE TABLE participa(
 ALTER TABLE participa ADD CONSTRAINT CHECK(presupuesto>0);
 
 
-
-
 /*EJERCICIOS*/
+
 /*primeras tuplas insertadas*/
 INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento,salario) VALUES(3,"Daniel","Casas","Rojas","7664567R","1996-13-01",786);
 INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento,salario) VALUES(9,"Pablo","Casado","Rojas","7664567R","1996-13-01",1021);
@@ -83,8 +74,8 @@ INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento,salar
 INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento,salario) VALUES(21,"Roberto","Casas","Cuna","7643567R",'1928-13-12',1080);
 /*NO ME INSERTA LAS FECHAS QUE LE PONGO, SOLO ME PONE 0000000000*/
 
-INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento, salario) VALUES(1,"Manolo","Jimenez","Vega","4534534A",0000-00-00,4334);
-INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento, salario) VALUES(1,"Manolo","Jimenez","Vega","4534534A",0000-00-00,4334);
+INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento, salario) VALUES(1,"Manolo","Jimenez","Vega","4534534A",'1997-13-07',4334);
+INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento, salario) VALUES(1,"Manolo","Jimenez","Vega","4534534A",'1986-10-10',4334);
 
 
 
