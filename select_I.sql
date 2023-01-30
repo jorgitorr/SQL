@@ -46,14 +46,55 @@ INSERT INTO personas SELECT * FROM personas WHERE cod_hospital = 1;
 siguientes campos (DNI, APELLIDOS, FUNCIÓN). ¿Cómo podremos
 introducir en esa tabla los datos de las PERSONAS del código de hospital
 4?*/
-
 /*
 5. Inserta en la tabla PERSONAS una persona con DNI 99887766 y apellidos
 ʻMartínez Martínez, Alejandroʼ en el hospital que tiene tan sólo 1 persona
 (INSERT con SELECT).*/
-INSERT INTO Personas()
-VALUES((SELECT cod_hospital FROM personas GROUP BY cod_hospital HAVING COUNT(dni)==1),"99887766","Martinez Martinez, Alejandro", NULL, 0);
+
 /*
 6. En la tabla HOSPITALES cambiar el código de los hospitales que tienen el
 código 3 al código 4. (Utilizar UPDATE).
 */
+UPDATE personas
+SET cod_hospital = 4
+WHERE cod_hospital = 3;
+
+
+/*Tablas EMPLE y DEPART*/
+CREATE TABLE emple(
+	emp_no SMALLINT(5),
+	apellido VARCHAR(20),
+	oficio VARCHAR(20),
+	dir SMALLINT(5),
+	fecha_alt DATE,
+	salario SMALLINT(10),
+	comision SMALLINT(10),
+	dept_no SMALLINT(10)
+);
+
+CREATE TABLE depart(
+	dept_no SMALLINT(3),
+	dnombre VARCHAR(20),
+	loc VARCHAR(20)
+);
+
+INSERT INTO emple(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)
+VALUES(7369, "SANCHEZ", "EMPLEADO",7902, 1960-12-17, 104000, NULL, 20),
+(7499, "ARROYO","VENDEDOR",7698, 1980-02-20, 208000, 39000, 30),
+(7521, "SALA","VENDEDOR",7698, 1981-02-22, 162500, 162500, 30),
+(7566, "JIMÉNEZ", "DIRECTOR", 7839, 1981-04-02, 386750, NULL, 20),
+(7654, "MARTÍN", "VENDEDOR", 7698, 1981-09-29, 162500, 182000, 30),
+(7698, "NEGRO", "DIRECTOR", 7839, 1981-05-01, 370500, NULL, 30),
+(7788, "GIL", "ANALISTA", 7566, 1981-11-09, 390000, NULL, 20),
+(7839, "REY", "PRESIDENTE", NULL, 1981-11-17, 650000, NULL, 10),
+(7844, "TOVAR", "VENDEDOR", 7698, 1981-09-08, 195000, 0, 30),
+(7876, "ALONSO", "EMPLEADO", 7788, 1981-09-23, 143000, NULL, 20),
+(7900, "JIMENO", "EMPLEADO", 7698, 1981-12-03, 1235000, NULL, 30),
+(7902, "FERNÁNDEZ", "ANALISTA", 7566, 1981-12-03, 390000, NULL, 20),
+(7934, "MUÑOZ", "EMPLEADO", 7782, 1982-01-23, 390000, NULL, 10);
+
+INSERT INTO depart(dept_no, dnombre, loc)
+VALUES(10, "CONTABILIDAD","SEVILLA"),
+(20, "INVESTIGACIÓN","MADRID"),
+(30, "VENTAS", "BARCELONA"),
+(40, "PRODUCCIÓN", "BILBAO");
