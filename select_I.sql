@@ -50,7 +50,7 @@ introducir en esa tabla los datos de las PERSONAS del código de hospital
 5. Inserta en la tabla PERSONAS una persona con DNI 99887766 y apellidos
 ʻMartínez Martínez, Alejandroʼ en el hospital que tiene tan sólo 1 persona
 (INSERT con SELECT).*/
-
+AUTOINCREMENT BUSCAR
 /*
 6. En la tabla HOSPITALES cambiar el código de los hospitales que tienen el
 código 3 al código 4. (Utilizar UPDATE).
@@ -98,3 +98,60 @@ VALUES(10, "CONTABILIDAD","SEVILLA"),
 (20, "INVESTIGACIÓN","MADRID"),
 (30, "VENTAS", "BARCELONA"),
 (40, "PRODUCCIÓN", "BILBAO");
+
+
+/*
+7.- Insertar en la tabla EMPLE un empleado con código 9999, apellido
+ʻGONZÁLEZʼ y código de departamento 10.
+8. Insertar en la tabla EMPLE un empleado con código 5000, apellido
+ʻMORAGAʼ, oficio ʻEMPLEADOʼ, su director es el empleado 7902, la fecha de
+alta en la empresa es ʻ17/10/99ʼ, su salario es 100000, no tiene comisión y
+pertenece al departamento número 20. (para indicar que no tiene comisión
+deberás poner NULL en el campo comisión).
+9. Insertar en la tabla DEPART un departamento cuyo número sea 50, de
+nombre ʻGENERALʼ y cuya localización sea ʻSEVILLAʼ.
+10. Insertar en la tabla DEPART un departamento cuyo número sea 60 y de
+nombre ʻPRUEBASʼ.
+11. Insertar en la tabla EMPLE30 los datos de los empleados que pertenecen al
+departamento número 30.
+12. Insertar en la tabla EMPLE20 el dni, número de departamento y salario de
+los empleados que pertenecen al departamento número 20.
+13. Doblar el salario a todos los empleados del departamento 30. (Utilizar
+UPDATE).
+14. Cambiar todos los empleados del departamento número 30 al
+departamento número 20.
+15. Incrementar en un 10% el sueldo de los empleados del departamento 10.
+(salario*1.1).
+16. Cambiar la localidad del departamento número 10 a ʻBILBAOʼ.
+17. Igualar el salario de ʻARROYOʼ al salario de ʻNEGROʼ, de la tabla
+EMPLE30.
+18. Igualar el salario y oficio de ʻMUÑOZʼ al salario y oficio de ʻJIMENOʼ, de la
+tabla EMPLE30.
+19. En la tabla DEPART borrar el departamento número 50.
+20. En la tabla EMPLE borrar todos los empleados que sean del departamento
+20 y sean ʻANALISTASʼ.
+21. Borrar de la tabla EMPLE todos los empleados que no tengan comisión.
+*/
+
+
+/*Tabla hospital*/
+CREATE TABLE hospitales(
+	cod_hospital SMALLINT(10),
+	nombre VARCHAR(50),
+	direccion VARCHAR(50),
+	num_plazas SMALLINT(10)
+);
+
+
+INSERT INTO hospitales VALUES(1, "Rafael Méndez", "Gran Vía, 7", 250),
+(2, "Reina Sofía", "Junterones, 5", 225),
+(3, "Principe Asturias", "Avenida Colón", 150),
+(4, "Virgen de la Arrixaca", "Avenida Juan Carlos, I", 250);
+
+/*
+22. Establecer el número de plazas de todos los hospitales a 250.
+23. Poner en 2000 el número de plazas del hospital número 3.
+24. Borra todos los hospitales cuyo nombre comience por la letra ʻRʼ.
+25. Con una sentencia UPDATE dobla el número de plazas de todos los
+hospitales.
+*/
