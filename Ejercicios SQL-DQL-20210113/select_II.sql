@@ -1,5 +1,5 @@
 CREATE DATABASE select_II;
-
+/*LA 22 ESTÁ MAL*/
 CREATE TABLE alumnos(
     expediente INT,
     nombre VARCHAR(50),
@@ -100,115 +100,123 @@ SELECT * FROM alumnos WHERE faltas!=10 AND nivel=1 AND curso="ESO";
 15 Muestra los datos de aquellos alumnos cuyo nombre empiece por la letra
 'B'.
 */
-
+SELECT * FROM alumnos WHERE nombre LIKE 'B%';
 /*
 16 Con una consulta obtén los alumnos que son de Murcia y cuyo nombre
 termina con una letra 'O'.
 */
-
+SELECT * FROM alumnos WHERE localidad = 'Murcia' AND nombre LIKE '%O';
 /*
 17 Muestra los datos de todos aquellos alumnos que están en 1º curso de
 E.S.O. Y tienen una letra 'U' en la segunda posición del nombre.
 */
-
+SELECT * FROM alumnos WHERE curso = 1 AND nivel = "ESO" AND nombre LIKE "_u%";
 
 /*
 18 Obtén los datos de los alumnos cuya columna “Faltas” es nula.
 */
 
 
+SELECT * FROM alumnos WHERE faltas IS NULL;
+
 /*
 19 Muestra los datos de aquellos alumnos que tienen entre 10 y 20 faltas
 (BETWEEN). Ordena el resultado por nombre.
 */
-
+SELECT * FROM alumnos WHERE faltas BETWEEN 10 AND 20;
 
 /*
 20 Muestra los datos de los alumnos que tienen entre 10 y 20 faltas y además
 son de Murcia.
 */
+SELECT * FROM alumnos WHERE faltas BETWEEN 10 AND 20 AND localidad = 'Murcia';
 
 /*
 21 Muestra los datos de los alumnos que tienen entre 10 y 20 faltas, son de
 Murcia y están matriculados en 1º de E.S.O.
 */
+SELECT * FROM alumnos WHERE faltas BETWEEN 10 AND 20 AND localidad = 'Murcia' AND curso = 1 AND nivel = 'ESO';
 
 /*
 22 Con una consulta muestra los datos de los alumnos cuyas faltas sean
 menores que 10 y mayores que 20.
 */
+SELECT * FROM alumnos WHERE faltas<10 OR faltas>20;
 
 /*
 23 Muestra los datos de los alumnos cuya fecha de nacimiento comprenda los
 años 1993 y 1994. Ordena el resultado por nombre.
 */
 
+SELECT * FROM fecha_nacimiento  WHERE BETWEEN '1993-01-12' AND '1994-12-31' ORDER BY nombre;
 
 /*
 24 Muestra los datos de los alumnos que sean de primer o segundo curso (no
 importa que sean de E.S.O. O Bachiller). Utiliza el operador IN.
 */
-
+SELECT * FROM alumnos where curso IN(1, 2);
 /*
 25 Obtén los datos de aquellos alumnos que sean de tercer o cuarto curso y
 sean de Murcia. Utiliza el operador IN.
 */
-
+SELECT * FROM alumnos WHERE curso IN(3,4) AND localidad IN('Murcia');
 
 /*
 26 Muestra los datos de los alumnos que no sean de E.S.O, ordenados por
 curso y por nombre descendentemente. Utiliza el operador IN.
 */
-
+SELECT * FROM alumnos WHERE nivel NOT IN('ESO') ORDER BY curso , nombre DESC;
 
 /*
 27 Muestra los datos de los alumnos que sean de primer o segundo curso y no
 sean de Bachiller. Ordena el resultado por nombre.
 */
-
+SELECT * FROM alumnos WHERE curso IN(1,2) AND nivel NOT IN('BACHILLERATO') ORDER BY nombre;
 
 /*
-Ejercicios de SQL (III). Pág. 328 Obtén los datos de los alumnos cuyo nombre empiece por la letra 'J', que
+28 Obtén los datos de los alumnos cuyo nombre empiece por la letra 'J', que
 tengan más de 10 faltas y no sean de Bachiller. Ordena el resultado por curso,
 y dentro de cada curso, por nombre.
 */
-
+SELECT * FROM alumnos WHERE nombre LIKE 'J%' AND faltas>10 AND nivel = 'BACHILLERATO' ORDER BY curso, nombre;
 
 /*
 29 Con una consulta obtén el expediente, nombre, curso y nivel de todos los
 alumnos ordenado por curso, nivel ascendentemente y nombre
 descendentemente cuyo nivel no sea 'BACHILLER'.
 */
-
+SELECT expediente, nombre, curso, nivel FROM alumnos WHERE nivel NOT IN('BACHILLERATO') ORDER BY curso, nivel ASC, nombre DESC;
 
 /*
 30 Con una consulta obtén el nombre de cada alumno en mayúscula cuya
 localidad sea Murcia.
 */
-
+SELECT UPPER(nombre) FROM alumnos WHERE localidad IN('Murcia'); 
 
 /*
 31 Muestra el nombre de cada alumno en mayúscula y la localidad a la que
 pertenecen en minúscula, ordenados por localidad.
 */
-
+SELECT UPPER(nombre), localidad FROM alumnos ORDER BY localidad; 
 
 /*
 32 Con una consulta concatena el nombre de cada alumno y la localidad y
 sustituye 'BACHILLER' por 'Bachillerato'.
 */
-
+SELECT CONCAT(nombre," ", localidad, " ") resultado FROM alumnos;
 /*
 33 Con una consulta obtén el nombre de cada alumno y la longitud de la
 cadena “Nombre”.
 */
-
+SELECT nombre, LENGTH(nombre) FROM alumnos; 
 /*
 34 Con una consulta obtén el nombre, año de nacimiento y mes de nacimiento
 de cada uno de los alumnos.
 */
-
+SELECT expediente,nombre,localidad,YEAR(fecha_nacimiento) as AÑO,MONTH(fecha_nacimiento) as MES,DAY(fecha_nacimiento) as DIA, direccion,curso,nivel FROM alumnos;
 /*
 35 Con una consulta muestra el nombre y edad de cada uno de los alumnos (la
 edad se calcula restando al año de nacimiento 2008)
 */
+
+SELECT nombre, 2008 - YEAR(fecha_nacimiento) edad FROM alumnos; 
