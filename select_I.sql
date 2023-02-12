@@ -210,10 +210,12 @@ INSERT INTO hospitales VALUES(1, "Rafael Méndez", "Gran Vía, 7", 250),
 
 /*
 22. Establecer el número de plazas de todos los hospitales a 250.*/
+UPDATE hospitales SET num_plazas = 250;
 
 /*23. Poner en 2000 el número de plazas del hospital número 3.*/
-
+UPDATE hospitales SET num_plazas = 2000 WHERE cod_hospital = 3;
 /*24. Borra todos los hospitales cuyo nombre comience por la letra ʻRʼ.*/
-
+DELETE * FROM hospitales WHERE nombre LIKE 'R%'; 
 /*25. Con una sentencia UPDATE dobla el número de plazas de todos los
 hospitales.*/
+UPDATE hospitales SET num_plazas*=num_plazas;

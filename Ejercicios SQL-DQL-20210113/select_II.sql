@@ -220,3 +220,4 @@ edad se calcula restando al año de nacimiento 2008)
 */
 
 SELECT nombre, 2008 - YEAR(fecha_nacimiento) edad FROM alumnos; 
+SELECT nombre, 2008 - YEAR(fecha_nacimiento) edad FROM alumnos; 
