@@ -223,7 +223,7 @@ SELECT nombre FROM FABRICANTE WHERE Pais="Estados Unidos";
 /*
 12 ¿Cuáles son los fabricantes no españoles? Utilizar el operador IN.*/
 
-
+SELECT codigo FROM FABRICANTE WHERE Pais NOT IN("Españoles");
 
 /*
 13 Obtén un listado con los códigos de las distintas versiones de Windows.*/
