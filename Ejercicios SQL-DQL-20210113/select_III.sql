@@ -228,24 +228,25 @@ SELECT codigo FROM FABRICANTE WHERE Pais NOT IN("Españoles");
 /*
 13 Obtén un listado con los códigos de las distintas versiones de Windows.*/
 
+SELECT DISTINCT version FROM PROGRAMA;
 
 /*
 14 ¿En qué ciudades comercializa programas El Corte Inglés?*/
 
-
+SELECT DISTINCT c.Ciudad FROM COMERCIO c, DISTRIBUYE d WHERE c.cif = d.cif and c.Nombre = "El Corte Inglés";
 
 /*
 15 ¿Qué otros comercios hay, además de El Corte Inglés? Utilizar el operador
 IN.*/
 
-
+SELECT DISTINCT nombre FROM COMERCIO WHERE nombre NOT IN("El Corte Inglés");
 
 
 /*
 16 Genera una lista con los códigos de las distintas versiones de Windows y
 Access. Utilizar el operador IN.*/
 
-
+SELECT p.Codigo FROM PROGRAMA p WHERE p.nombre IN("Access");
 
 
 /*
@@ -253,34 +254,40 @@ Access. Utilizar el operador IN.*/
 comprendidas entre 10 y 25 y de los mayores de 50 años. Da una solución con
 BETWEEN y otra sin BETWEEN.*/
 
-
+SELECT c.nombre FROM CLIENTE c WHERE c.edad>50 OR c.edad BETWEEN 10 AND 25;
 
 
 /*
 18 Saca un listado con los comercios de Sevilla y Madrid. No se admiten
 valores duplicados.*/
 
-
+SELECT DISTINCT c.nombre  FROM COMERCIO c WHERE c.ciudad IN("Sevilla","Madrid");
 
 /*
 19 ¿Qué clientes terminan su nombre en la letra “o”?*/
 
-
+SELECT c.nombre FROM CLIENTE c WHERE c.nombre LIKE '%o';
 
 
 /*
 20 ¿Qué clientes terminan su nombre en la letra “o” y, además, son mayores de 30 años?*/
 
+SELECT c.nombre FROM CLIENTE c WHERE c.nombre LIKE '%o' AND c.edad>30;
 
 /*
 21 Obtén un listado en el que aparezcan los programas cuya versión finalice por una letra i, o cuyo nombre comience por una A o por una W.*/
 
+SELECT DISTINCT p.Nombre FROM PROGRAMA p WHERE p.version LIKE '%i' AND p.nombre LIKE 'A%' OR p.nombre LIKE 'W%';
 
 
 /*22 Obtén un listado en el que aparezcan los programas cuya versión finalice por una letra i, o cuyo nombre comience por una A y termine por una S.*/
 
+SELECT p.nombre, p.version FROM PROGRAMA p WHERE p.version LIKE '%i' OR p.nombre LIKE 'A%s';
 
 /*23 Obtén un listado en el que aparezcan los programas cuya versión finalice por una letra i, y cuyo nombre no comience por una A.*/
+
+
+
 /*24 Obtén una lista de empresas por orden alfabético ascendente.*/
 
 
