@@ -286,19 +286,32 @@ SELECT p.nombre, p.version FROM PROGRAMA p WHERE p.version LIKE '%i' OR p.nombre
 
 /*23 Obtén un listado en el que aparezcan los programas cuya versión finalice por una letra i, y cuyo nombre no comience por una A.*/
 
-
+SELECT * FROM PROGRAMA p LIKE p.nombre LIKE '%i' AND p.nombre LIKE 'A%';
 
 /*24 Obtén una lista de empresas por orden alfabético ascendente.*/
 
+SELECT c.Nombre 
+FROM COMERCIO c ORDER BY c.Nombre ASC;
 
 /*
 25 Genera un listado de empresas por orden alfabético descendente.*/
-
+SELECT c.Nombre FROM COMERCIO c ORDER BY c.Nombre DESC;
 
 /*
 26 Obtén un listado de programas por orden de versión*/
+
+SELECT p.Nombre FROM PROGRAMA p ORDER BY p.version;
+
 /*27 Genera un listado de los programas que desarrolla Oracle.*/
+SELECT f.nombre, p.nombre 
+FROM DESARROLLA d, PROGRAMA p, FABRICANTE f 
+WHERE f.id_fab = d.id_fab AND d.codigo = p.codigo AND f.nombre = "Oracle" 
+GROUP BY f.nombre, p.nombre;
+
 /*28 ¿Qué comercios distribuyen Windows?*/
+
+SELECT c.Nombre FROM COMERCIO c, PROGRAMA p, DISTRIBUYE d WHERE c.cif = d.cif AND d.codigo = p.codigo AND p.Nombre = "Windows"; 
+
 /*29 Genera un listado de los programas y cantidades que se han distribuido a El Corte Inglés de Madrid.*/
 
 /*
