@@ -314,48 +314,76 @@ SELECT c.Nombre FROM COMERCIO c, PROGRAMA p, DISTRIBUYE d WHERE c.cif = d.cif AN
 
 /*29 Genera un listado de los programas y cantidades que se han distribuido a El Corte Inglés de Madrid.*/
 
+SELECT p.nombre, SUM(d.cantidad) 
+FROM programa p, distribuye d, comercio c 
+where p.codigo = d.codigo and d.CIF = c.CIF and c.Nombre = "El Corte Inglés" and c.Ciudad = "Madrid" 
+GROUP BY p.nombre;
+
 /*
 30 ¿Qué fabricante ha desarrollado Freddy Hardest?*/
-
+SELECT f.Nombre
+FROM FABRICANTE f, desarrolla d, programa p 
+WHERE f.ID_Fab = d.ID_Fab and d.Codigo = p.codigo and p.nombre = "Freddy Hardest";
 
 /*
 31 Selecciona el nombre de los programas que se registran por Internet.*/
 
+SELECT DISTINCT p.nombre FROM programa p, registra r WHERE p.codigo = r.codigo and r.medio="Internet";
 
 /*
 32 Selecciona el nombre de las personas que se registran por Internet.*/
 
-
+SELECT DISTINCT c.Nombre FROM cliente c, registra r WHERE c.DNI = r.dni and r.medio = "Internet";
 
 /*
 33 ¿Qué medios ha utilizado para registrarse Pepe Pérez?*/
-
+SELECT r.medio 
+FROM registra r, cliente c 
+WHERE r.dni = c.DNI and c.Nombre = "Pepe Perez" GROUP BY r.medio;
 
 /*
 34 ¿Qué usuarios han optado por Internet como medio de registro?*/
 
-
+SELECT DISTINCT c.Nombre FROM cliente c, registra r WHERE c.DNI = r.dni and r.medio = "Internet";
 
 /*
 35 ¿Qué programas han recibido registros por tarjeta postal?*/
-
+SELECT p.nombre 
+FROM PROGRAMA p, registra r 
+WHERE p.codigo = r.codigo and r.medio = "tarjeta postal";
 
 /*
 36 ¿En qué localidades se han vendido productos que se han registrado por Internet?*/
+
+SELECT DISTINCT c.Ciudad
+FROM registra r, comercio c
+WHERE r.cif = c.CIF  and r.medio = "Internet";
 
 
 /*
 37 Obtén un listado de los nombres de las personas que se han registrado por Internet, junto al nombre de los programas para los que ha efectuado el registro.*/
 
+SELECT c.Nombre, p.nombre
+FROM cliente c, registra r, programa p
+WHERE c.DNI = r.dni and p.codigo = r.codigo and r.medio = "Internet";
 
 /*38 Genera un listado en el que aparezca cada cliente junto al programa que ha registrado, el medio con el que lo ha hecho y el comercio en el que lo ha adquirido.*/
 
+SELECT c.Nombre cliente, p.nombre programa, r.medio medio, c2.Nombre comercio
+FROM cliente c, programa p, registra r, comercio c2
+WHERE c.DNI = r.dni and p.codigo = r.codigo and c2.CIF = r.cif;
 
 /*39 Genera un listado con las ciudades en las que se pueden obtener los productos de Oracle.*/
-
+SELECT DISTINCT c2.Ciudad
+FROM cliente c, registra r, programa p, desarrolla d, fabricante f, comercio c2
+WHERE c.DNI = r.dni and p.codigo = r.codigo and p.codigo = d.Codigo and d.ID_Fab = f.ID_Fab and c2.CIF = r.cif
+and f.Nombre = "Oracle";
 
 /*40 Obtén el nombre de los usuarios que han registrado Access XP.*/
-
+/*¿Ninguno?*/
+SELECT c.nombre
+FROM cliente c, registra r, programa p
+WHERE c.DNI = r.dni and r.codigo = p.codigo and p.nombre = "Access" and p.version = "XP"; 
 
 /*41 Nombre de aquellos fabricantes cuyo país es el mismo que ʻOracleʼ.(Subconsulta).*/
 
