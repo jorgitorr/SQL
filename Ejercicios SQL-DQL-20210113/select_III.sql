@@ -387,25 +387,56 @@ WHERE c.DNI = r.dni and r.codigo = p.codigo and p.nombre = "Access" and p.versio
 
 /*41 Nombre de aquellos fabricantes cuyo país es el mismo que ʻOracleʼ.(Subconsulta).*/
 
+SELECT f.nombre
+FROM fabricante f
+WHERE f.Pais IN(SELECT f.Pais
+               FROM fabricante f
+               WHERE f.Nombre = "Oracle");
 
 /*42 Nombre de aquellos clientes que tienen la misma edad que Pepe Pérez.(Subconsulta).*/
-
+SELECT c.nombre
+FROM cliente c 
+WHERE c.edad IN(SELECT c2.Edad
+               FROM cliente c2
+               WHERE c2.Nombre IN("Pepe Pérez") and c.Nombre NOT IN("Pepe Pérez"));
 
 /*43 Genera un listado con los comercios que tienen su sede en la misma ciudad que tiene el comercio ʻFNACʼ. (Subconsulta).*/
-
+SELECT c.Nombre
+FROM comercio c
+WHERE c.Ciudad IN(SELECT c2.Ciudad
+                 FROM comercio c2
+                 WHERE c.Nombre IN("FNAC"));
 
 /*44 Nombre de aquellos clientes que han registrado un producto de la misma forma que el cliente ʻPepe Pérezʼ. (Subconsulta).*/
+SELECT c.nombre, r.medio FROM cliente c, registra r WHERE r.dni = c.DNI and r.medio IN(
+    SELECT r2.medio
+	FROM registra r2, cliente c2
+	WHERE r2.dni = c2.DNI and c2.Nombre = "Pepe Pérez") and c.Nombre NOT IN("Pepe Pérez");
 
 
 /*45 Obtener el número de programas que hay en la tabla programas.*/
-
+SELECT COUNT(*)
+FROM programa p; 
 
 /*46 Calcula el número de clientes cuya edad es mayor de 40 años.*/
-/*47 Calcula el número de productos que ha vendido el establecimiento cuyo CIF es 1.*/
+SELECT COUNT(c.Nombre)
+FROM cliente c
+WHERE c.Edad>40;
 
+
+/*47 Calcula el número de productos que ha vendido el establecimiento cuyo CIF es 1.*/
+SELECT COUNT(*) 
+FROM distribuye d 
+WHERE d.CIF = 1;
 
 /*48 Calcula la media de programas que se venden cuyo código es 7.*/
+
+
+
 /*49 Calcula la mínima cantidad de programas de código 7 que se ha vendido*/
+
+
+
 
 /*
 50 Calcula la máxima cantidad de programas de código 7 que se ha vendido.*/
