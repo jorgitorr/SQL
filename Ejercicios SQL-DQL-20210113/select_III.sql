@@ -430,43 +430,62 @@ FROM distribuye d
 WHERE d.CIF = 1;
 
 /*48 Calcula la media de programas que se venden cuyo código es 7.*/
+/*(El round te devuelve un valor con muchos decimales por lo tanto hay que usar la funcion round para redondearlo)*/
 
-
+SELECT ROUND(AVG(d.cantidad),0)
+FROM programa p, distribuye d
+WHERE p.codigo = d.codigo and p.codigo IN(7)
+GROUP BY p.codigo;
 
 /*49 Calcula la mínima cantidad de programas de código 7 que se ha vendido*/
+SELECT MIN(d.cantidad)
+FROM distribuye d
+WHERE d.codigo = 7
+GROUP BY d.codigo;
+
+/*50 Calcula la máxima cantidad de programas de código 7 que se ha vendido.*/
+SELECT MAX(d.cantidad)
+FROM distribuye d
+WHERE d.codigo = 7
+GROUP BY d.codigo;
+
+/*51 ¿En cuántos establecimientos se vende el programa cuyo código es 7?*/
+SELECT COUNT(c.Nombre)
+FROM programa p, distribuye d, comercio c 
+WHERE p.codigo = 7 and p.codigo = d.codigo and c.CIF = d.CIF;
+
+
+/*52 Calcular el número de registros que se han realizado por Internet.*/
+SELECT COUNT(*)
+FROM registra r
+WHERE r.medio = "Internet"
+GROUP BY r.medio;
+
+
+/*53 Obtener el número total de programas que se han vendido en ʻSevillaʼ.*/
+SELECT COUNT(*)
+FROM programa p, distribuye d, comercio c 
+WHERE p.codigo = d.codigo and d.CIF = d.CIF and c.Ciudad IN("Sevilla")
+GROUP BY c.Ciudad;
+
+
+/*54 Calcular el número total de programas que han desarrollado los fabricantes cuyo país es ʻEstados Unidosʼ.*/
+SELECT COUNT(p.nombre)
+FROM programa p, desarrolla d, fabricante f
+WHERE p.codigo = d.codigo and d.id_fab = f.id_fab and f.Pais IN(
+    SELECT f.Pais 
+    FROM fabricante f 
+    WHERE f.Pais="Estados Unidos")
+GROUP BY f.Pais;
+
+/*55 Visualiza el nombre de todos los clientes en mayúscula. En el resultado de la consulta debe aparecer también la longitud de la 
+cadena nombre.*/
+SELECT UPPER(c.nombre) nombre, LENGTH(c.nombre) longuitud
+FROM cliente c
+GROUP BY c.nombre;
 
 
 
-
-/*
-50 Calcula la máxima cantidad de programas de código 7 que se ha vendido.*/
-
-
-/*
-51 ¿En cuántos establecimientos se vende el programa cuyo código es 7?*/
-
-
-
-/*
-52 Calcular el número de registros que se han realizado por Internet.*/
-
-
-
-/*
-53 Obtener el número total de programas que se han vendido en ʻSevillaʼ.*/
-
-
-
-/*
-54 Calcular el número total de programas que han desarrollado los fabricantes cuyo país es ʻEstados Unidosʼ.*/
-
-
-
-/*
-55 Visualiza el nombre de todos los clientes en mayúscula. En el resultado de la consulta debe aparecer también la longitud de la cadena nombre.*/
-
-
-
-
-/*
-56 Con una consulta concatena los campos nombre y versión de la tabla PROGRAMA.*/
+/*56 Con una consulta concatena los campos nombre y versión de la tabla PROGRAMA.*/
+SELECT CONCAT(nombre, " ", version)
+FROM programa;
