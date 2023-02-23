@@ -464,8 +464,8 @@ GROUP BY r.medio;
 
 /*53 Obtener el número total de programas que se han vendido en ʻSevillaʼ.*/
 SELECT COUNT(*)
-FROM programa p, distribuye d, comercio c 
-WHERE p.codigo = d.codigo and d.CIF = d.CIF and c.Ciudad IN("Sevilla")
+FROM comercio c, registra r
+WHERE c.cif=r.cif and c.Ciudad IN("Sevilla")
 GROUP BY c.Ciudad;
 
 
