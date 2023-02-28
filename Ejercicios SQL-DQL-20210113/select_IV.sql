@@ -142,85 +142,142 @@ WHERE e.dept_no = d.dept_no and e.oficio IN(SELECT e2.oficio
 
 /*11. Mostrar el apellido, salario y nombre del departamento de los empleados
 que tengan el mismo oficio que ʻGILʼ y que no tengan comisión.*/
-
+SELECT e.apellido, salario, e.dept_no
+FROM emple e
+WHERE e.oficio IN(SELECT e2.oficio
+                FROM emple e2
+                WHERE e2.apellido = "GIL") and e.comision is null;
 
 
 
 /*12. Mostrar los datos de los empleados que trabajan en el departamento de
 contabilidad, ordenados por apellidos.*/
 
-
+SELECT *
+FROM emple e JOIN depart d ON e.dept_no = d.dept_no
+WHERE d.dnombre = "CONTABILIDAD" ORDER BY e.apellido;
 
 
 
 /*13. Apellido de los empleados que trabajan en Sevilla y cuyo oficio sea analista
 o empleado.*/
 
-
+SELECT e.apellido
+FROM emple e, depart d 
+WHERE e.dept_no = d.dept_no and d.loc = "Sevilla" and e.oficio = "ANALISTA" or e.oficio = "EMPLEADO"
+GROUP BY e.apellido;
 
 
 
 /*14. Calcula el salario medio de todos los empleados.*/
 
+SELECT avg(e.salario)
+FROM emple e;
 
 
 
 /*15. ¿Cuál es el máximo salario de los empleados del departamento 10?*/
 
+SELECT MAX(e.salario) 
+FROM emple e 
+WHERE e.dept_no = 10 
+GROUP BY e.dept_no;
 
 
 
 
 /*16. Calcula el salario mínimo de los empleados del departamento 'VENTAS'.*/
-
+SELECT MIN(e.salario)
+FROM emple e, depart d 
+WHERE d.dept_no = e.dept_no and d.dnombre = "VENTAS"
+GROUP BY d.dnombre;
 
 
 
 /*17. Calcula el promedio del salario de los empleados del departamento de
 'CONTABILIDAD'.*/
-
+SELECT AVG(e.salario)
+FROM emple e, depart d 
+WHERE e.dept_no = e.dept_no and d.dnombre = "CONTABILIDAD"
+GROUP BY d.dnombre;
 
 
 
 /*18. Mostrar los datos de los empleados cuyo salario sea mayor que la media de
 todos los salarios.*/
 
+SELECT *
+FROM emple e 
+WHERE e.salario > (SELECT AVG(e2.salario)
+                    FROM emple e2);
 
 
 
 /*19. ¿Cuántos empleados hay en el departamento número 10?*/
 
+SELECT dept_no, COUNT(e.apellido)
+FROM emple e 
+WHERE e.dept_no = 10
+GROUP BY e.dept_no;
 
 
 
 /*20. ¿Cuántos empleados hay en el departamento de 'VENTAS'?*/
 
+SELECT COUNT(e.apellido)
+FROM emple e, depart d  
+WHERE e.dept_no = d.dept_no and d.dnombre = "VENTAS"
+GROUP BY d.dnombre;
 
 
 /*21. Calcula el número de empleados que hay que no tienen comisión.*/
-
+SELECT COUNT(*) 
+FROM emple e 
+WHERE e.comision 
+IS NULL OR e.comision=0;
 
 
 /*22. Seleccionar el apellido del empleado que tiene máximo salario.*/
+SELECT e.apellido
+FROM emple e 
+WHERE e.salario IN(SELECT MAX(e2.salario)
+                    FROM emple e2);
 
 
 
 /*23. Mostrar los apellidos del empleado que tiene el salario más bajo.*/
+
+SELECT e.apellido 
+FROM emple e 
+WHERE e.salario IN(SELECT MIN(e2.salario)
+                FROM emple e2);
 
 
 
 
 /*24. Mostrar los datos del empleado que tiene el salario más alto en el
 departamento de 'VENTAS'.*/
-
+SELECT *
+FROM emple e, depart d 
+WHERE e.dept_no = d.dept_no and d.dnombre = "VENTAS" and e.salario IN(SELECT MAX(e2.salario)
+                                                                    FROM emple e2);
 
 
 /*25. A partir de la tabla EMPLE visualizar cuántos apellidos de los empleados
 empiezan por la letra ʻA'.*/
-
+SELECT COUNT(e.apellido)
+FROM emple e
+WHERE e.apellido LIKE 'A%';
 
 
 
 /*26. Dada la tabla EMPLE, obtener el sueldo medio, el número de comisiones no
 nulas, el máximo sueldo y el sueldo mínimo de los empleados del departamento 30.
 */
+SELECT round(avg(e.salario),0), COUNT(e.comision), MAX(e.salario), MIN(e.salario)
+FROM emple e 
+WHERE e.comision IS NOT NULL and e.dept_no = 30
+GROUP BY e.dept_no; 
+
+
+
