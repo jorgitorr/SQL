@@ -443,6 +443,18 @@ FROM distribuye d
 WHERE d.codigo = 7
 GROUP BY d.codigo;
 
+/*49 Calcula la mínima cantidad de programas de código 7 que se ha vendido en cada comercio*/
+SELECT c.nombre, COUNT(r.codigo)
+FROM REGISTRA r , COMERCIO c
+WHERE r.codigo = 7 and r.cif = c.cif
+GROUP BY c.nombre/*filtra por nombre de comercio, ya que comparten el mismo cif y por tanto solo sale 1 nombre*/
+HAVING COUNT(*)=(SELECT COUNT(*) total
+				FROM REGISTRA r 
+				WHERE r.codigo = 7
+				GROUP BY r.cif
+                ORDER BY total ASC /*TE COGE EL MIN, YA QUE EN MISQL NO PERMITE HACER FUNCION DE FUNCION MIN(COUNT(*))*/
+                LIMIT 1);
+
 /*50 Calcula la máxima cantidad de programas de código 7 que se ha vendido.*/
 SELECT MAX(d.cantidad)
 FROM distribuye d
