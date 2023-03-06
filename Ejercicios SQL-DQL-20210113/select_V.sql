@@ -1,3 +1,11 @@
+CREATE TABLE DEPART(
+	dept_no TINYINT,
+	dnombre VARCHAR(20),
+	loc VARCHAR(20),
+	CONSTRAINT DEP_DEPT_PK PRIMARY KEY(dept_no)
+);
+
+
 CREATE TABLE EMPLE(
 	emp_no SMALLINT PRIMARY KEY,
 	apellido VARCHAR(20),
@@ -10,14 +18,6 @@ CREATE TABLE EMPLE(
 	CONSTRAINT EMP_DEPT_FK FOREIGN KEY(dept_no) REFERENCES DEPART(dept_no)
 );
 
-
-
-CREATE TABLE DEPART(
-	dept_no TINYINT,
-	dnombre VARCHAR(20),
-	loc VARCHAR(20),
-	CONSTRAINT DEP_DEPT_PK PRIMARY KEY(dept_no)
-);
 
 
 CREATE TABLE HERRAMIENTAS(
@@ -40,7 +40,7 @@ CREATE TABLE PERSONAS(
 	apellidos VARCHAR(50),
 	funcion VARCHAR(15),
 	salario SMALLINT,
-	CONSTRAINT PER_HOS_FK FOREIGN KEY(cod_hospital) REFERENCES hospitales(cod_hospital)
+	CONSTRAINT PER_HOS_FK FOREIGN KEY(cod_hospital) REFERENCES HOSPITALES(cod_hospital)
 );
 
 CREATE TABLE MEDICOS(
@@ -211,30 +211,47 @@ GROUP BY e.oficio;
 
 /*11. Visualizar la suma de salarios de cada oficio del departamento
 ʻVENTASʼ.*/
-SELECT SUM(e.salario)
-FROM emple e, depart d
-WHERE e.dept_no = d.dept_no
-GROUP BY e.oficio
-HAVING d.dnombre = "VENTAS"; 
+SELECT e.oficio, SUM(e.salario)
+FROM EMPLE e, DEPART d
+WHERE e.dept_no = d.dept_no and d.dnombre = "VENTAS"
+GROUP BY e.oficio; 
 
 
 /*12. Visualizar el número de departamento que tenga más empleados cuyo
 oficio sea empleado.*/
-
+SELECT d.dept_no
+FROM EMPLE e, DEPART d 
+WHERE e.dept_no = d.dept_no
+ORDER BY e.apellido DESC
+LIMIT 1;
 
 
 /*13. Mostrar el número de oficios distintos de cada departamento.*/
+
+SELECT d.dept_no, COUNT(e.oficio)
+FROM DEPART d, EMPLE e
+WHERE d.dept_no = e.dept_no
+GROUP BY d.dept_no;  
 
 
 
 /*14. Mostrar los departamentos que tengan más de dos personas
 trabajando en la misma profesión.*/
 
+select e.dept_no
+FROM EMPLE e 
+GROUP BY e.dept_no, e.oficio
+HAVING COUNT(*)>2;
 
-
+/*si la tupla es nula no contaría la fila con COUNT()*/
 
 /*15. Dada la tabla HERRAMIENTAS, visualizar por cada estantería la suma
-de las unidades. (EN APUNTES)*/
+de las unidades.*/
+
+SELECT h.estanteria, SUM(h.unidades)
+FROM HERRAMIENTAS h 
+GROUP BY h.estanteria;
+
 
 
 /*16. Visualizar la estantería con más unidades de la tabla HERRAMIENTAS.
@@ -243,15 +260,30 @@ Estantería
 1
 Tablas PERSONAS, MEDICOS, HOSPITALES.*/
 
+SELECT h.estanteria
+FROM HERRAMIENTAS h
+GROUP BY h.estanteria
+ORDER BY h.unidades DESC
+LIMIT 1;
 
 
 /*17. Mostrar el número de médicos que pertenecen a cada hospital,
 ordenado por número descendente de hospital.*/
 
+SELECT h.cod_hospital, COUNT(m.apellidos)
+FROM HOSPITALES h, MEDICOS m 
+WHERE m.cod_hospital = h.cod_hospital 
+GROUP BY h.cod_hospital
+ORDER BY h.cod_hospital DESC;
 
 
 /*18. Realizar una consulta en la que se muestre por cada hospital el
 nombre de las especialidades que tiene.*/
+
+SELECT h.nombre, m.especialidad
+FROM HOSPITALES h, MEDICOS m 
+WHERE h.cod_hospital = m.cod_hospital
+GROUP BY h.nombre, m.especialidad;
 
 
 
@@ -259,17 +291,32 @@ nombre de las especialidades que tiene.*/
 especialidad el número de médicos (tendrás que partir de la consulta anterior
 y utilizar GROUP BY).*/
 
+SELECT h.cod_hospital, m.especialidad, COUNT(*) 
+FROM HOSPITALES h, MEDICOS m
+WHERE h.cod_hospital = m.cod_hospital
+GROUP BY h.cod_hospital, m.especialidad;
 
 
 /*20. Obtener por cada hospital el número de empleados.*/
-
+SELECT h.nombre, COUNT(*)
+FROM HOSPITALES h, PERSONAS p
+WHERE h.cod_hospital = p.cod_hospital
+GROUP BY h.nombre;
 
 
 /*21. Obtener por cada especialidad el número de trabajadores.*/
 
-
+SELECT m.especialidad, COUNT(*) 
+FROM MEDICOS m 
+GROUP BY m.especialidad;
 
 /*22. Visualizar la especialidad que tenga más médicos.*/
+
+SELECT m.especialidad especialidad_con_mas_medicos
+FROM MEDICOS m 
+GROUP BY m.especialidad
+ORDER BY COUNT(*) DESC
+LIMIT 1;
 
 
 
