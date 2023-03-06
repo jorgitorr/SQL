@@ -318,36 +318,57 @@ GROUP BY m.especialidad
 ORDER BY COUNT(*) DESC
 LIMIT 1;
 
-
-
 /*23. ¿Cuál es el nombre del hospital que tiene mayor número de plazas?*/
 
+SELECT h.nombre 
+FROM HOSPITALES h, PERSONAS p 
+WHERE h.cod_hospital = p.cod_hospital
+GROUP BY h.cod_hospital
+ORDER BY h.cod_hospital DESC
+LIMIT 1;
 
 
 /*24. Visualizar las diferentes estanterías de la tabla HERRAMIENTAS
 ordenados descendentemente por estantería.*/
 
-
+SELECT *
+FROM herramientas h 
+ORDER BY h.estanteria DESC;
 
 /*25. Averiguar cuántas unidades tiene cada estantería.*/
-
+SELECT h.estanteria, SUM(h.unidades)
+FROM herramientas h
+GROUP BY h.estanteria;
 
 
 /*26. Visualizar las estanterías que tengan más de 15 unidades*/
-
+SELECT h.estanteria
+FROM herramientas h 
+GROUP BY h.estanteria
+HAVING SUM(h.unidades)>15;
 
 
 /*27. ¿Cuál es la estantería que tiene más unidades?*/
-
+SELECT h.estanteria
+FROM herramientas h
+ORDER BY SUM(h.unidades)
+LIMIT 1;
 
 /*28. A partir de las tablas EMPLE y DEPART mostrar los datos del
 departamento que no tiene ningún empleado.*/
-
+SELECT *
+FROM emple e 
+RIGHT JOIN depart d ON e.dept_no = d.dept_no
+WHERE e.emp_no IS NULL;
 
 
 /*29. Mostrar el número de empleados de cada departamento. En la salida
 se debe mostrar también los departamentos que no tienen ningún
 empleado.*/
+SELECT d.dept_no, COUNT(*)
+FROM depart d
+LEFT JOIN emple e ON e.dept_no = d.dept_no
+GROUP BY d.dept_no;
 
 
 
@@ -356,12 +377,20 @@ columnas DEPT_NO, SUMA DE SALARIOS y DNOMBRE. En el resultado
 también se deben mostrar los departamentos que no tienen asignados
 empleados.*/
 
+SELECT d.dept_no, SUM(e.salario), d.dnombre
+FROM depart d
+LEFT JOIN emple e ON d.dept_no = e.dept_no
+GROUP BY d.dept_no;
 
 
 /*31. Utilizar la función IFNULL en la consulta anterior para que en el caso
 de que un departamento no tenga empleados, aparezca como suma de
 salarios el valor 0.*/
 
+SELECT d.dept_no, IFNULL(SUM(e.salario),0), d.dnombre
+FROM depart d
+LEFT JOIN emple e ON d.dept_no = e.dept_no
+GROUP BY d.dept_no;
 
 
 /*32. Obtener el número de médicos que pertenecen a cada hospital,
@@ -369,5 +398,17 @@ mostrando las columnas COD_HOSPITAL, NOMBRE y NÚMERO DE
 MÉDICOS. En el resultado deben aparecer también los datos de los
 hospitales que no tienen médicos.*/
 
+SELECT h.cod_hospital, h.nombre, COUNT(*) numeros_de_medicos
+FROM hospitales h
+LEFT JOIN medicos m USING(cod_hospital)
+GROUP BY h.cod_hospital;
 
 
+
+
+
+/*DUDAS*/
+/*EN EL 29 ME SALE 1 EN EL DEPARTAMENTO QUE NO TIENE NINGUN EMPLEADO 
+¿COMO PODRÍA CAMBIAR ESTO PARA QUE ME SALIESE 0?*/
+/*en el 32 me pasa lo mismo que en el 29*/
+/*HAY ALGUNA OTRA MANERA diferente DE HACER EL 28*/
