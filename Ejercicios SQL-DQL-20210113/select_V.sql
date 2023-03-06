@@ -1,64 +1,57 @@
 CREATE TABLE EMPLE(
-	emp_no SMALLINT(5) PRIMARY KEY,
+	emp_no SMALLINT PRIMARY KEY,
 	apellido VARCHAR(20),
     oficio VARCHAR(20),
 	dir SMALLINT(5),
 	fecha_alt DATE,
-	salario MEDIUMINT(10),
-	comision MEDIUMINT(7),
-	dept_no TINYINT(2));
+	salario MEDIUMINT,
+	comision MEDIUMINT,
+	dept_no TINYINT,
+	CONSTRAINT EMP_DEPT_FK FOREIGN KEY(dept_no) REFERENCES DEPART(dept_no)
+);
 
 
 
 CREATE TABLE DEPART(
-	dept_no TINYINT(3)PRIMARY KEY,
+	dept_no TINYINT,
 	dnombre VARCHAR(20),
-	loc VARCHAR(20));
+	loc VARCHAR(20),
+	CONSTRAINT DEP_DEPT_PK PRIMARY KEY(dept_no)
+);
 
 
 CREATE TABLE HERRAMIENTAS(
 	descripcion VARCHAR(20),
 	estanteria TINYINT(2),
-	unidades TINYINT(2));
-
-
-CREATE TABLE PERSONAS(
-	cod_hospital TINYINT(2),
-	dni CHAR(8),
-	apellidos VARCHAR(50),
-	funcion VARCHAR(15),
-	salario SMALLINT(4) 
-);
-
-CREATE TABLE MEDICOS(
-	cod_hospital TINYINT(2),
-	dni CHAR(8),
-	apellidos VARCHAR(50),
-	especialidad VARCHAR(12)
+	unidades TINYINT(2)
 );
 
 CREATE TABLE HOSPITALES(
 	cod_hospital TINYINT(2),
 	nombre VARCHAR(50),
 	direccion VARCHAR(50),
-	num_plazas SMALLINT(4)
+	num_plazas SMALLINT(4),
+	CONSTRAINT HOS_PK PRIMARY KEY(cod_hospital)
+);
+
+CREATE TABLE PERSONAS(
+	cod_hospital TINYINT,
+	dni CHAR(8),
+	apellidos VARCHAR(50),
+	funcion VARCHAR(15),
+	salario SMALLINT,
+	CONSTRAINT PER_HOS_FK FOREIGN KEY(cod_hospital) REFERENCES hospitales(cod_hospital)
+);
+
+CREATE TABLE MEDICOS(
+	cod_hospital TINYINT(2),
+	dni CHAR(8),
+	apellidos VARCHAR(50),
+	especialidad VARCHAR(12),
+	CONSTRAINT MED_HOS_FK FOREIGN KEY(cod_hospital) REFERENCES HOSPITALES(cod_hospital) 
 );
 
 
-/*VALORES DE EMPLE*/
-INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7369, 'SANCHEZ', 'EMPLEADO', 7902, '1980/12/17', 104000, null , 20);
-INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7499, 'ARROYO', 'VENDEDOR', 7698, '1980/02/20', 208000, 39000, 30);
-INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7521, 'SARA', 'VENDEDOR', 7698, '1981/02/22', 162500, 162500, 30);
-INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7566, 'JIMÉNEZ', 'DIRECTOR', 7839, '1981/04/02', 386750, null, 20);
-INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7654, 'MARTÍN', 'VENDEDOR', 7698, '1981/09/29', 162500, 182000, 30);
-INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7698, 'NEGRO', 'DIRECTOR', 7839, '1981/05/01', 370500, null, 30);
-INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7788, 'GIL', 'ANALISTA', 7566, '1981/11/09', 390000, null, 20);
-INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7839, 'REY', 'PRESIDENTE', null, '1981/11/17', 650000, null, 10);
-INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7844, 'TOVAR', 'VENDEDOR', 7698, '1981/09/08', 195000, 0, 30);
-INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7876, 'ALONSO', 'EMPLEADO', 7788, '1981/09/23', 143000, null, 20);
-INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7900, 'JIMENO', 'EMPLEADO', 7698, '1981/12/03', 1235000, null, 30);
-INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7902, 'FERNANDEZ', 'ANALISTA', 7566, '1981/12/03', 390000, null, 20);
-INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7934, 'MUÑOZ', 'EMPLEADO', 7782, '1982/01/23', 169000, null, 10);
 
 
 
@@ -80,6 +73,27 @@ INSERT INTO HERRAMIENTAS( descripcion, estanteria, unidades)VALUES('Metro', 5, 1
 INSERT INTO HERRAMIENTAS( descripcion, estanteria, unidades)VALUES('Sierra', 4, 5);
 INSERT INTO HERRAMIENTAS( descripcion, estanteria, unidades)VALUES('Soldador', 1, 15);
 
+/*VALORES DE EMPLE*/
+INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7369, 'SANCHEZ', 'EMPLEADO', 7902, '1980/12/17', 104000, null , 20);
+INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7499, 'ARROYO', 'VENDEDOR', 7698, '1980/02/20', 208000, 39000, 30);
+INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7521, 'SARA', 'VENDEDOR', 7698, '1981/02/22', 162500, 162500, 30);
+INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7566, 'JIMÉNEZ', 'DIRECTOR', 7839, '1981/04/02', 386750, null, 20);
+INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7654, 'MARTÍN', 'VENDEDOR', 7698, '1981/09/29', 162500, 182000, 30);
+INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7698, 'NEGRO', 'DIRECTOR', 7839, '1981/05/01', 370500, null, 30);
+INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7788, 'GIL', 'ANALISTA', 7566, '1981/11/09', 390000, null, 20);
+INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7839, 'REY', 'PRESIDENTE', null, '1981/11/17', 650000, null, 10);
+INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7844, 'TOVAR', 'VENDEDOR', 7698, '1981/09/08', 195000, 0, 30);
+INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7876, 'ALONSO', 'EMPLEADO', 7788, '1981/09/23', 143000, null, 20);
+INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7900, 'JIMENO', 'EMPLEADO', 7698, '1981/12/03', 1235000, null, 30);
+INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7902, 'FERNANDEZ', 'ANALISTA', 7566, '1981/12/03', 390000, null, 20);
+INSERT INTO EMPLE(emp_no, apellido, oficio, dir, fecha_alt, salario, comision, dept_no)VALUES(7934, 'MUÑOZ', 'EMPLEADO', 7782, '1982/01/23', 169000, null, 10);
+
+/*VALORES DE HOSPITALES*/
+
+INSERT INTO HOSPITALES( cod_hospital, nombre, direccion, num_plazas)VALUES(1, 'Rafael Méndez', 'Gran Vía, 7', 250);
+INSERT INTO HOSPITALES( cod_hospital, nombre, direccion, num_plazas)VALUES(2, 'Reina Sofía', 'Junterones, 5', 225);
+INSERT INTO HOSPITALES( cod_hospital, nombre, direccion, num_plazas)VALUES(3, 'Principe Asturias', 'Avenida Colón', 150);
+INSERT INTO HOSPITALES( cod_hospital, nombre, direccion, num_plazas)VALUES(4, 'Virgen de la Arrixia', 'Avenida Juan Carlos, I', 250);
 
 /*VALORES DE PERSONAS*/
 INSERT INTO PERSONAS( cod_hospital, dni, apellidos, funcion, salario)VALUES(1, '12345678', 'Garcia Hernández, Eladio', 'CONSERJE', 1500);
@@ -102,27 +116,211 @@ INSERT INTO MEDICOS( cod_hospital, dni, apellidos, especialidad)VALUES(2, '22233
 INSERT INTO MEDICOS( cod_hospital, dni, apellidos, especialidad)VALUES(4, '33222111', 'Mesa del Castillo, Juan', 'DERMATOLOGO');
 INSERT INTO MEDICOS( cod_hospital, dni, apellidos, especialidad)VALUES(1, '66655544', 'Castillo Montes, Pedro', 'PSIQUIATRA');
 
-/*VALORES DE HOSPITALES*/
 
-INSERT INTO HOSPITALES( cod_hospital, nombre, direccion, num_plazas)VALUES(1, 'Rafael Méndez', 'Gran Vía, 7', 250);
-INSERT INTO HOSPITALES( cod_hospital, nombre, direccion, num_plazas)VALUES(2, 'Reina Sofía', 'Junterones, 5', 225);
-INSERT INTO HOSPITALES( cod_hospital, nombre, direccion, num_plazas)VALUES(3, 'Principe Asturias', 'Avenida Colón', 150);
-INSERT INTO HOSPITALES( cod_hospital, nombre, direccion, num_plazas)VALUES(4, 'Virgen de la Arrixia', 'Avenida Juan Carlos, I', 250);
-/*25. A partir de la tabla EMPLE visualizar cuántos apellidos de los empleados
-empiezan por la letra ʻA'.*/
+
+
+/*
+1. Visualizar el número de empleados de cada departamento. Utilizar
+GROUP BY para agrupar por departamento.*/
+SELECT d.dept_no, COUNT(*) /*tambien puedo poner cualquier fila de emple*/
+FROM depart d, emple e
+WHERE d.dept_no = e.dept_no
+GROUP BY d.dept_no
+
+/*2. Visualizar los departamentos con más de 5 empleados. Utilizar GROUP
+BY para agrupar por departamento y HAVING para establecer la condición
+sobre los grupos.*/
+SELECT d.dept_no
+FROM depart d, emple e
+WHERE d.dept_no = e.dept_no
+GROUP BY d.dept_no
+HAVING COUNT(e.apellido)>5;
+
+
+/*3. Hallar la media de los salarios de cada departamento (utilizar la función
+avg y GROUP BY).*/
+
+SELECT d.dept_no, ROUND(AVG(e.salario),2)
+FROM depart d, emple e 
+WHERE d.dept_no = e.dept_no
+GROUP BY d.dept_no;
+
+
+
+/*4. Visualizar el nombre de los empleados vendedores del departamento
+ʻVENTASʼ (Nombre del departamento=ʼVENTASʼ, oficio=ʼVENDEDORʼ).*/
+
+SELECT e.apellido
+FROM emple e, depart d
+WHERE e.dept_no = e.dept_no and d.dnombre = "VENTAS" and e.oficio = "VENDEDOR"
+GROUP BY e.apellido;
+
+
+
+/*5. Visualizar el número de vendedores del departamento ʻVENTASʼ (utilizar
+la función COUNT sobre la consulta anterior).*/
+
 SELECT COUNT(e.apellido)
-FROM emple e
-WHERE e.apellido LIKE 'A%';
+FROM emple e, depart d 
+WHERE e.dept_no = d.dept_no and d.dnombre = "VENTAS" and e.oficio = "VENDEDOR";
+
+
+/*6. Visualizar los oficios de los empleados del departamento ʻVENTASʼ.*/
+
+SELECT e.oficio
+FROM emple e, depart d 
+WHERE e.dept_no = d.dept_no and d.dnombre = "VENTAS"
+GROUP BY e.oficio;
+
+/*7. A partir de la tabla EMPLE, visualizar el número de empleados de cada
+departamento cuyo oficio sea ʻEMPLEADOʼ (utilizar GROUP BY para
+agrupar por departamento. En la cláusula WHERE habrá que indicar que el
+oficio es ʻEMPLEADOʼ).*/
+
+SELECT e.apellido
+FROM emple e, depart d 
+WHERE e.dept_no = d.dept_no and e.oficio = "EMPLEADO"
+GROUP BY d.dept_no;
+
+
+/*8. Visualizar el departamento con más empleados.*/
+
+SELECT d.dept_no
+FROM depart d, emple e 
+WHERE d.dept_no = e.dept_no 
+GROUP BY d.dept_no
+ORDER BY COUNT(e.apellido) DESC
+LIMIT 1;
+
+/*nuevo*/
+
+/*9. Mostrar los departamentos cuya suma de salarios sea mayor que la
+media de salarios de todos los empleados.*/
+SELECT d.dept_no
+FROM depart d, emple e 
+WHERE e.dept_no = e.dept_no 
+GROUP BY d.dept_no
+HAVING SUM(e.salario)>AVG(e.salario)
+
+/*10. Para cada oficio obtener la suma de salarios.*/
+SELECT SUM(e.salario)
+FROM depart d, emple e 
+WHERE d.dept_no = e.dept_no
+GROUP BY e.oficio;
+
+
+/*11. Visualizar la suma de salarios de cada oficio del departamento
+ʻVENTASʼ.*/
+SELECT SUM(e.salario)
+FROM emple e, depart d
+WHERE e.dept_no = d.dept_no
+GROUP BY e.oficio
+HAVING d.dnombre = "VENTAS"; 
+
+
+/*12. Visualizar el número de departamento que tenga más empleados cuyo
+oficio sea empleado.*/
 
 
 
-/*26. Dada la tabla EMPLE, obtener el sueldo medio, el número de comisiones no
-nulas, el máximo sueldo y el sueldo mínimo de los empleados del departamento 30.
-*/
-SELECT round(avg(e.salario),0), COUNT(e.comision), MAX(e.salario), MIN(e.salario)
-FROM emple e 
-WHERE e.comision IS NOT NULL and e.dept_no = 30
-GROUP BY e.dept_no; 
+/*13. Mostrar el número de oficios distintos de cada departamento.*/
+
+
+
+/*14. Mostrar los departamentos que tengan más de dos personas
+trabajando en la misma profesión.*/
+
+
+
+
+/*15. Dada la tabla HERRAMIENTAS, visualizar por cada estantería la suma
+de las unidades. (EN APUNTES)*/
+
+
+/*16. Visualizar la estantería con más unidades de la tabla HERRAMIENTAS.
+Estantería
+-
+1
+Tablas PERSONAS, MEDICOS, HOSPITALES.*/
+
+
+
+/*17. Mostrar el número de médicos que pertenecen a cada hospital,
+ordenado por número descendente de hospital.*/
+
+
+
+/*18. Realizar una consulta en la que se muestre por cada hospital el
+nombre de las especialidades que tiene.*/
+
+
+
+/*19. Realizar una consulta en la que aparezca por cada hospital y en cada
+especialidad el número de médicos (tendrás que partir de la consulta anterior
+y utilizar GROUP BY).*/
+
+
+
+/*20. Obtener por cada hospital el número de empleados.*/
+
+
+
+/*21. Obtener por cada especialidad el número de trabajadores.*/
+
+
+
+/*22. Visualizar la especialidad que tenga más médicos.*/
+
+
+
+/*23. ¿Cuál es el nombre del hospital que tiene mayor número de plazas?*/
+
+
+
+/*24. Visualizar las diferentes estanterías de la tabla HERRAMIENTAS
+ordenados descendentemente por estantería.*/
+
+
+
+/*25. Averiguar cuántas unidades tiene cada estantería.*/
+
+
+
+/*26. Visualizar las estanterías que tengan más de 15 unidades*/
+
+
+
+/*27. ¿Cuál es la estantería que tiene más unidades?*/
+
+
+/*28. A partir de las tablas EMPLE y DEPART mostrar los datos del
+departamento que no tiene ningún empleado.*/
+
+
+
+/*29. Mostrar el número de empleados de cada departamento. En la salida
+se debe mostrar también los departamentos que no tienen ningún
+empleado.*/
+
+
+
+/*30. Obtener la suma de salarios de cada departamento, mostrando las
+columnas DEPT_NO, SUMA DE SALARIOS y DNOMBRE. En el resultado
+también se deben mostrar los departamentos que no tienen asignados
+empleados.*/
+
+
+
+/*31. Utilizar la función IFNULL en la consulta anterior para que en el caso
+de que un departamento no tenga empleados, aparezca como suma de
+salarios el valor 0.*/
+
+
+
+/*32. Obtener el número de médicos que pertenecen a cada hospital,
+mostrando las columnas COD_HOSPITAL, NOMBRE y NÚMERO DE
+MÉDICOS. En el resultado deben aparecer también los datos de los
+hospitales que no tienen médicos.*/
 
 
 
