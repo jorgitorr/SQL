@@ -122,101 +122,146 @@ insert into llevar values(4,1,'MMO');
 
 
 /*1. Obtener el código, el tipo, el color y el premio de todos los maillots que hay.*/
-
+SELECT m.codigo, m.tipo, m.color, m.premio
+FROM maillot m;
 
 
 /*2. Obtener el dorsal y el nombre de los ciclistas cuya edad sea menor o igual
 que 25 años.*/
-
+SELECT c.dorsal, c.nombre
+FROM ciclista c
+WHERE c.edad<=25;
 
 /*3. Obtener el nombre y la altura de todos los puertos de categoría
 ʻEʼ (Especial).*/
-
+SELECT p.nompuerto, p.altura 
+FROM puerto p
+WHERE p.categoria LIKE 'E';
 
 
 /*4. Obtener el valor del atributo netapa de aquellas etapas con salida y llegada
 en la misma ciudad.*/
-
+SELECT e.netapa
+FROM etapa e
+WHERE e.salida=e.llegada;
 
 
 
 /*5. ¿Cuántos ciclistas hay?*/
-
+SELECT COUNT(*)
+FROM ciclista c;
 
 
 
 /*6. ¿Cuántos ciclistas hay con edad superior a 25 años?*/
-
+SELECT COUNT(*)
+FROM ciclista c
+WHERE c.edad>25; 
 
 
 
 /*7. ¿Cuántos equipos hay?*/
-
+SELECT COUNT(*)
+FROM equipo;
 
 
 
 
 /*8. Obtener la media de edad de los ciclistas.*/
-
+SELECT ROUND(AVG(c.edad),2)
+FROM ciclista c;
 
 
 
 /*9. Obtener la altura mínima y máxima de los puertos de montaña.*/
-
-
+SELECT MIN(p.altura), MAX(p.altura)
+FROM puerto p;
 
 
 /*10. Obtener el nombre de cada ciclista junto con el nombre del equipo al que
 pertenece*/
-
+SELECT c.nombre, e.nomeq
+FROM ciclista c, equipo e 
+WHERE c.nomeq = e.nomeq;
 
 
 
 /*11. Obtener el nombre de los ciclistas que sean de Banesto.*/
-
+SELECT c.nombre
+FROM ciclista c, equipo e;
 
 
 
 /*12. ¿Cuántos ciclistas pertenecen al equipo Amore Vita?*/
-
+SELECT COUNT(c.nombre)
+FROM ciclista c 
+WHERE c.nomeq = "Amore Vita";
 
 
 
 /*13. Edad media de los ciclistas del equipo TVM.*/
-
+SELECT ROUND(AVG(c.edad),0)
+FROM ciclista c 
+WHERE c.nomeq = "TVM";
 
 
 
 
 /*14. Nombre de los ciclistas que pertenezcan al mismo equipo que Miguel
 Indurain*/
+SELECT c.nombre
+FROM ciclista c
+WHERE c.nomeq IN(SELECT c1.nomeq
+FROM ciclista c1
+WHERE c1.nombre = "Miguel Indurain")
+and c.nombre!="Miguel Indurain"; 
 
 
 
 
 /*15. Nombre de los ciclistas que han ganado alguna etapa.*/
-
+SELECT c.nombre
+FROM ciclista c, etapa e
+WHERE c.dorsal = e.dorsal
+GROUP BY c.nombre; 
 
 
 /*16. Nombre de los ciclistas que han llevado el maillot General.*/
-
+SELECT c.nombre
+FROM ciclista c, llevar l, maillot m  
+WHERE c.dorsal = l.dorsal AND l.codigo = m.codigo
+AND m.tipo = "General"
+GROUP BY c.nombre;
 
 
 /*17. Obtener el nombre del ciclista más joven.*/
-
+SELECT c.nombre
+FROM ciclista c
+WHERE c.edad IN(SELECT MIN(c1.edad)
+FROM ciclista c1)
+GROUP BY c.nombre; 
 
 
 /*18. Obtener el número de ciclistas de cada equipo.*/
-
+SELECT c.nomeq, COUNT(*)
+FROM ciclista c 
+GROUP BY c.nomeq;
 
 
 /*19. Obtener el nombre de los equipos que tengan más de 5 ciclistas.*/
-
+SELECT e.nomeq
+FROM ciclista c, equipo e 
+WHERE c.nomeq = e.nomeq
+GROUP BY c.nomeq
+HAVING COUNT(c.nombre)>5;
 
 
 
 /*20. Obtener el número de puertos que ha ganado cada ciclista.*/
-
+SELECT c.nombre, COUNT(*)
+FROM puerto p, ciclista c
+WHERE c.dorsal = p.dorsal 
+GROUP BY c.dorsal;
 
 
 /*21. Obtener el nombre de los ciclistas que han ganado más de un puerto.*/
@@ -230,15 +275,50 @@ ciclista mayor de 33 años.*/
 
 
 
-/*23. Nombre de los ciclistas que no pertenezcan a Kelme
-/*24. Nombre de los ciclistas que no hayan ganado ninguna etapa.
-/*25. Nombre de los ciclistas que no hayan ganado ningún puerto de montaña.
-/*26. Nombre de los ciclistas que hayan ganado más de un puerto de montaña.
-/*27. ¿Qué ciclistas han llevado el mismo maillot que Miguel Indurain?
-/*28. De cada equipo obtener la edad media, la máxima edad y la mínima edad.
+/*23. Nombre de los ciclistas que no pertenezcan a Kelme*/
+
+
+/*24. Nombre de los ciclistas que no hayan ganado ninguna etapa.*/
+
+
+
+
+/*25. Nombre de los ciclistas que no hayan ganado ningún puerto de montaña.*/
+
+
+
+
+/*26. Nombre de los ciclistas que hayan ganado más de un puerto de montaña.*/
+
+
+
+
+
+/*27. ¿Qué ciclistas han llevado el mismo maillot que Miguel Indurain?*/
+
+
+
+
+
+/*28. De cada equipo obtener la edad media, la máxima edad y la mínima edad.*/
+
+
+
+
+
 /*29. Nombre de aquellos ciclistas que tengan una edad entre 25 y 30 años y que
-no pertenezcan a los equipos Kelme y Banesto.
-/*30. Nombre de los ciclistas que han ganado la etapa que comienza en Zamora.
+no pertenezcan a los equipos Kelme y Banesto.*/
+
+
+
+
+
+
+/*30. Nombre de los ciclistas que han ganado la etapa que comienza en Zamora.*/
+
+
+
+
 
 /*31. Obtén el nombre y la categoría de los puertos ganados por ciclistas del
 equipo ʻBanestoʼ.*/
