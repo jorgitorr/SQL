@@ -412,3 +412,6 @@ GROUP BY h.cod_hospital;
 ¿COMO PODRÍA CAMBIAR ESTO PARA QUE ME SALIESE 0?*/
 /*en el 32 me pasa lo mismo que en el 29*/
 /*HAY ALGUNA OTRA MANERA diferente DE HACER EL 28*/
+
+
+replace(1,0);

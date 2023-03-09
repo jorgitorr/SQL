@@ -265,13 +265,19 @@ GROUP BY c.dorsal;
 
 
 /*21. Obtener el nombre de los ciclistas que han ganado más de un puerto.*/
-
+SELECT c.nombre
+FROM ciclista c, puerto p 
+WHERE c.dorsal = p.dorsal
+GROUP BY c.nombre;
 
 
 
 /*22. Obtener el nombre y el director de los equipos a los que pertenezca algún
 ciclista mayor de 33 años.*/
-
+SELECT c.nombre
+FROM ciclista c, equipo e 
+WHERE c.nomeq = e.nomeq AND c.edad>33
+GROUP BY c.nombre;
 
 
 
@@ -501,3 +507,61 @@ maillot menos de los que ha llevado el ciclista de dorsal 3.*/
 
 /*63. Obtener el valor del atributo netapa y los km de las etapas que tienen
 puertos de montaña.*/
+
+
+
+
+
+/*insertar en un select into un select
+Añadir al ganador de más etapas sin contar la última etapa
+*/
+
+ /*->UPDATE para modificar los datos de la tabla*/
+
+UPDATE etapa e 
+SET e.dorsal = (/*el ganador de la etapa(el que más etapas ha ganado)*/SELECT e1.dorsal 
+                FROM etapa1 e1
+                WHERE e1.netapa !=(/*excepto la última etapa*/SELECT netapa 
+                                    FROM etapa 
+                                    ORDER BY netapa ASC 
+                                    LIMIT 1)
+                GROUP BY e1.dorsal
+                ORDER BY COUNT(e1.dorsal) DESC
+                LIMIT 1)
+WHERE e.netapa = (/*ultima etapa*/SELECT MAX(e1.netapa)
+FROM etapa e1);
+
+
+/*
+1- Obtener la suma de ventas de cada región, en el caso de que se realizaran
+ventas en esa región, ordenando por región*/
+SELECT g.region_name, SUM(s.Sales)
+FROM Store_Information s, Geography g
+WHERE s.store_name = g.store_name
+GROUP BY g.region_name
+ORDER BY g.region_name;
+
+/*2- Obtener un listado de las ventas se registraron en Enero de 1999 en cada
+región ordenado por región; en particular se desea que aparezcan las
+regiones en las que ese día no hubo ventas*/
+
+SELECT g.region_name
+FROM Geography g LEFT JOIN Store_Information s USING(store_name)
+WHERE MONTH(s.Date) = "Jan" AND YEAR(s.Date) = '1999'
+ORDER BY g.region_name
+GROUP BY g.region_name;
+
+/*
+NVL(sales,0) -> si el valor del campo es nulo se muestra 0
+IFNULL
+*/
+
+/*3-Obtener la suma de ventas de cada región ordenando por región; como caso
+particular, aunque una región no tenga registrada ventas, debe aparecer en el
+listado esa región (sin ningún valor asociado de ventas). Resolver el ejercicio
+de dos formas diferentes.*/
+
+
+/*4-Obtener la media de las ventas de cada región ordenando por región.
+Nota: hay que definir lo que significa “media de ventas de una región”?
+*/
