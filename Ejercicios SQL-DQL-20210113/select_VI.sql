@@ -282,74 +282,108 @@ GROUP BY c.nombre;
 
 
 /*23. Nombre de los ciclistas que no pertenezcan a Kelme*/
+SELECT c.nombre
+FROM ciclista c 
+WHERE c.nomeq NOT IN('Kelme')
+GROUP BY c.nombre;
 
 
 /*24. Nombre de los ciclistas que no hayan ganado ninguna etapa.*/
-
-
+SELECT c.dorsal, c.nombre 
+FROM ciclista c 
+LEFT JOIN etapa e USING(dorsal) 
+WHERE e.dorsal IS NULL 
+GROUP BY c.nombre;
 
 
 /*25. Nombre de los ciclistas que no hayan ganado ningún puerto de montaña.*/
-
-
+SELECT c.dorsal, c.nombre 
+FROM puerto p RIGHT JOIN ciclista c USING(dorsal)
+WHERE p.dorsal IS NULL
+GROUP BY c.nombre;
 
 
 /*26. Nombre de los ciclistas que hayan ganado más de un puerto de montaña.*/
-
-
-
+SELECT c.nombre
+FROM ciclista c, puerto p
+WHERE c.dorsal = p.dorsal 
+GROUP BY c.dorsal
+HAVING COUNT(*)>1;
 
 
 /*27. ¿Qué ciclistas han llevado el mismo maillot que Miguel Indurain?*/
-
-
-
+SELECT c.dorsal, c.nombre, l.codigo
+FROM ciclista c, llevar l 
+WHERE c.dorsal = l.dorsal 
+AND l.codigo IN(SELECT l1.codigo
+                FROM llevar l1, ciclista c1 
+                WHERE l1.dorsal = c1.dorsal
+                AND c1.nombre = "Miguel Indurain")
+GROUP BY c.nombre;
 
 
 /*28. De cada equipo obtener la edad media, la máxima edad y la mínima edad.*/
-
-
+SELECT c.nomeq equipo, AVG(c.edad) edad_media, MAX(c.edad) edad_maxima, MIN(c.edad) edad_minima 
+FROM ciclista c
+GROUP BY c.nomeq;
 
 
 
 /*29. Nombre de aquellos ciclistas que tengan una edad entre 25 y 30 años y que
 no pertenezcan a los equipos Kelme y Banesto.*/
-
-
-
-
+SELECT c.nombre, c.edad
+FROM ciclista c
+WHERE c.edad BETWEEN 25 AND 30
+AND c.nomeq != "Kelme" AND c.nomeq != "Banesto"
+GROUP BY c.nombre;
 
 
 /*30. Nombre de los ciclistas que han ganado la etapa que comienza en Zamora.*/
-
-
+SELECT c.nomeq, c.nombre, c.edad
+FROM ciclista c
+WHERE c.edad BETWEEN 25 AND 30
+AND c.nomeq != "Kelme" AND c.nomeq != "Banesto"
+GROUP BY c.nombre;
 
 
 
 /*31. Obtén el nombre y la categoría de los puertos ganados por ciclistas del
 equipo ʻBanestoʼ.*/
 
-
+SELECT p.nompuerto, p.categoria
+FROM ciclista c, puerto p 
+WHERE c.dorsal = p.dorsal AND c.nomeq IN("Banesto")
+GROUP BY p.nompuerto;
 
 
 /*32. Obtener el nombre de cada puerto indicando el número (netapa) y los
 kilómetros de la etapa en la que se encuentra el puerto.*/
 
-
+SELECT p.netapa, e.km
+FROM puerto p, etapa e 
+WHERE p.netapa = e.netapa
+GROUP BY e.netapa;
 
 
 /*33. Obtener el nombre de los ciclistas con el color de cada maillot que hayan
 llevado.*/
 
-
+SELECT l.codigo, c.nombre, m.color
+FROM ciclista c, llevar l, maillot m
+WHERE c.dorsal = l.dorsal AND l.codigo = m.codigo
+GROUP BY c.dorsal, m.color;
 
 
 
 /*34. Obtener pares de nombre de ciclista y número de etapa tal que ese ciclista
 haya ganado esa etapa habiendo llevado el maillot de color amarillo al menos
 una vez.*/
-
-
+SELECT c.nombre
+FROM ciclista c, etapa e, llevar l, maillot m 
+WHERE c.dorsal = e.dorsal 
+AND e.netapa = l.netapa 
+AND l.codigo = m.codigo;
+/*TERMINAR*/
 
 
 
@@ -533,6 +567,7 @@ FROM etapa e1);
 
 
 /*
+LEFT JOIN / RIGHT JOIN:
 1- Obtener la suma de ventas de cada región, en el caso de que se realizaran
 ventas en esa región, ordenando por región*/
 SELECT g.region_name, SUM(s.Sales)
