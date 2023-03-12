@@ -378,172 +378,349 @@ GROUP BY c.dorsal, m.color;
 /*34. Obtener pares de nombre de ciclista y número de etapa tal que ese ciclista
 haya ganado esa etapa habiendo llevado el maillot de color amarillo al menos
 una vez.*/
-SELECT c.nombre
-FROM ciclista c, etapa e, llevar l, maillot m 
+SELECT c.nombre, e.netapa, m.color
+FROM ciclista c, etapa e, llevar l, maillot m, puerto p
 WHERE c.dorsal = e.dorsal 
 AND e.netapa = l.netapa 
-AND l.codigo = m.codigo;
-/*TERMINAR*/
-
-
+AND l.codigo = m.codigo 
+AND m.color = "Amarillo"
+GROUP BY c.nombre, e.netapa;
 
 
 
 /*35. Obtener el valor del atributo netapa de las etapas que no comienzan en la
 misma ciudad en que acabó la anterior etapa.*/
 
-
+SELECT e.netapa
+FROM etapa e 
+WHERE e.salida NOT IN(SELECT e1.llegada
+                 	  FROM etapa e1
+                      WHERE e1.netapa IN(SELECT netapa-1
+                                        FROM etapa 
+                                        WHERE netapa != 0));
 
 
 /*36. Obtener el valor del atributo netapa y la ciudad de salida de aquellas etapas
 que no tengan puertos de montaña.*/
-
+SELECT e.netapa, e.salida 
+FROM etapa e LEFT JOIN puerto p USING(netapa)
+WHERE p.netapa IS NULL;
 
 
 /*37. Obtener la edad media de los ciclistas que han ganado alguna etapa.*/
-
+SELECT c.nombre, ROUND(AVG(c.edad),0) edad_media
+FROM ciclista c, etapa e 
+WHERE c.dorsal = e.dorsal
+GROUP BY c.nombre;
 
 
 /*38. Selecciona el nombre de los puertos con una altura superior a la altura
 media de todos los puertos.*/
-
+SELECT p.nompuerto
+FROM puerto p
+GROUP BY p.nompuerto
+HAVING SUM(p.altura)>(SELECT AVG(altura)
+                from puerto);
 
 
 /*39. Obtener el nombre de la ciudad de salida y de llegada de las etapas donde
 estén los puertos con mayor pendiente.*/
-
+SELECT e.salida, e.llegada
+FROM etapa e, puerto p 
+WHERE e.netapa = p.netapa
+GROUP BY e.salida, e.llegada
+ORDER BY p.pendiente 
+LIMIT 2;
 
 
 /*40. Obtener el dorsal y el nombre de los ciclistas que han ganado los puertos
 de mayor altura.*/
+SELECT c.dorsal, c.nombre
+FROM ciclista c, puerto p
+WHERE c.dorsal = p.dorsal
+GROUP BY c.dorsal
+ORDER BY p.altura 
+LIMIT 3;
 
+/*otra forma:*/
 
+SELECT c.dorsal, c.nombre
+FROM ciclista c, puerto p
+WHERE c.dorsal = p.dorsal
+GROUP BY p.dorsal
+HAVING MAX(p.altura)=(SELECT MAX(p.altura)
+GROUP BY p.dorsal);
 
 
 /*41. Obtener el nombre del ciclista más joven que ha ganado al menos una
 etapa.*/
-
+SELECT c.nombre, c.edad
+FROM ciclista c, etapa e 
+WHERE c.dorsal = e.dorsal
+ORDER BY c.edad ASC
+LIMIT 1;
 
 
 /*42. Obtener el valor del atributo netapa de aquellas etapas tales que todos los
 puertos que están en ellas tienen más de 700 metros de altura.*/
-
+SELECT e.netapa
+FROM etapa e, puerto p 
+WHERE e.netapa = p.netapa
+GROUP BY e.netapa
+HAVING AVG(p.altura)>700;
 
 
 
 /*43. Obtener el nombre y el director de los equipos tales que todos sus ciclistas
 son mayores de 20 años.*/
+/*
+NO FUNCIONA:(NO SE PORQUÉ)
+SELECT e.nomeq, e.descripcion
+FROM equipo e, ciclista c 
+WHERE c.nomeq = e.nomeq AND c.edad>20
+GROUP BY e.nomeq;*/
 
-
+SELECT e.nomeq, e.descripcion
+FROM equipo e, ciclista c 
+WHERE c.nomeq = e.nomeq AND c.nomeq NOT IN(SELECT nomeq
+                                          FROM ciclista
+                                          WHERE edad<=20)
+GROUP BY e.nomeq, e.descripcion;
 
 
 /*44. Obtener el dorsal y el nombre de los ciclistas tales que todas las etapas que
 han ganado tienen más de 170 km (es decir que sólo han ganado etapas de
 más de 170 km).*/
-
+SELECT c.dorsal, c.nombre
+FROM ciclista c, etapa e
+WHERE c.dorsal = e.dorsal
+AND e.km>170
+GROUP BY c.dorsal, c.nombre;
 
 
 
 /*45. Obtener el nombre de los ciclistas que han ganado todos los puertos de
 una etapa y además han ganado esa misma etapa.*/
-
+SELECT c.nombre
+FROM ciclista c, etapa e, puerto p 
+WHERE c.dorsal = e.dorsal AND p.netapa = e.netapa
+GROUP BY c.nombre;
 
 
 
 /*46. Obtener el nombre de los equipos tales que todos sus corredores han
 llevado algún maillot o han ganado algún puerto.*/
-
-
-
+SELECT c.nomeq
+FROM ciclista c, puerto p, llevar l
+WHERE c.dorsal = p.dorsal AND c.dorsal = l.dorsal
+GROUP BY c.nomeq;
 
 /*47. Obtener el código y el color de aquellos maillots que sólo han sido llevados
 por ciclistas de un mismo equipo.*/
 
 
+SELECT m.codigo, m.color
+FROM ciclista c, llevar l, maillot m
+WHERE c.dorsal = l.dorsal 
+AND l.codigo = m.codigo 
+AND l.codigo NOT IN(SELECT l1.codigo
+                    FROM llevar l1, ciclista c1
+                    WHERE c1.dorsal = l1.dorsal 
+                    AND c1.nomeq!=c.nomeq);
+
+/*OTRA OPCION, PERO NO ME INCLUYE EL ULTIMO MAILLOT, POR ESO 
+ESTÁ MAL*/
+
+
+SELECT m.codigo, m.color
+FROM ciclista c, llevar l, maillot m
+WHERE c.dorsal = l.dorsal 
+AND l.codigo = m.codigo 
+AND NOT EXISTS(SELECT l1.codigo
+                    FROM llevar l1, ciclista c1
+                    WHERE c1.dorsal = l1.dorsal 
+                    AND c1.nomeq!=c.nomeq);
 
 
 /*48. Obtener el nombre de aquellos equipos tal que sus ciclistas sólo hayan
 ganado puertos de 1ª categoría.*/
+SELECT c.nomeq, p.categoria
+FROM ciclista c, puerto p
+WHERE c.dorsal = p.dorsal AND p.categoria = 1
+AND NOT EXISTS(SELECT c1.nomeq
+              FROM ciclista c1, puerto p1
+              WHERE c1.dorsal = p1.dorsal
+               AND c1.nomeq = c.nomeq
+              AND p1.categoria != 1)
+GROUP BY c.nomeq;
+
+/*otra forma más simple*/
+
+SELECT c.nomeq, p.categoria 
+FROM ciclista c, puerto p 
+WHERE c.dorsal = p.dorsal 
+AND p.categoria = 1 
+GROUP BY c.nomeq;
 
 
 
-/*49. Obtener el valor del atributo netapa de aquellas etapas que tienen puertos
-de montaña indicando cuántos tiene.*/
-
+/*49. Obtener el valor del atributo netapa de aquellas etapas que tienen puertos de montaña indicando cuántos tiene.*/
+SELECT e.netapa, COUNT(p.nompuerto)
+FROM etapa e, puerto p
+WHERE e.netapa = p.netapa
+GROUP BY e.netapa;
 
 
 
 /*50. Obtener el nombre de todos los equipos indicando cuántos ciclistas tiene
 cada uno.*/
-
-
+SELECT c.nomeq, COUNT(*)
+FROM ciclista c 
+GROUP BY c.nomeq;
 
 
 /*51. Obtener el director y el nombre de los equipos que tengan más de 3
 ciclistas y cuya edad media sea igual o inferior a 30 años.*/
+SELECT c.nomeq, e.descripcion
+FROM ciclista c, equipo e 
+WHERE c.nomeq = e.nomeq
+GROUP BY c.nomeq
+HAVING COUNT(*)>3 AND AVG(c.edad)<=30;
 
 
 
-/*52. Obtener el nombre de los ciclistas que pertenezcan a un equipo que tenga
-más de cinco corredores y que hayan ganado alguna etapa indicando cuántas
-etapas ha ganado.*/
+/*52. Obtener el nombre de los ciclistas que pertenezcan a un equipo que tenga más de cinco corredores y que hayan ganado alguna etapa indicando cuántas etapas ha ganado.*/
+SELECT c.nomeq, c.nombre, COUNT(e.netapa)
+FROM ciclista c, etapa e 
+WHERE c.dorsal = e.dorsal
+GROUP BY c.nomeq
+HAVING COUNT(c.nombre)>5;
 
 
 /*53. Obtener el nombre de los equipos y la edad media de sus ciclistas de
 aquellos equipos que tengan la media de edad máxima de todos los equipos.*/
+SELECT c.nomeq, AVG(c.edad)
+FROM ciclista c 
+GROUP BY c.nomeq
+ORDER BY AVG(c.edad) DESC
+LIMIT 3;
 
 
 /*54. Obtener el director de los equipos cuyos ciclistas han llevado más días
 maillots de cualquier tipo.*/
-
+SELECT e.descripcion, COUNT(l.codigo)
+FROM ciclista c, llevar l, equipo e 
+WHERE c.dorsal = l.dorsal AND c.nomeq = e.nomeq
+GROUP BY c.nomeq
+ORDER BY COUNT(l.codigo) DESC
+LIMIT 1;
 
 
 /*55. Obtener el código y el color del maillot que ha sido llevado por algún ciclista
 que no ha ganado ninguna etapa.*/
-
-
+SELECT m.codigo, m.color 
+FROM maillot m, llevar l, ciclista c, etapa e 
+WHERE l.codigo = m.codigo AND c.dorsal = l.dorsal
+AND c.dorsal NOT IN(SELECT e.dorsal
+                   FROM etapa e )
+GROUP BY m.codigo, m.color;
 
 /*56. Obtener el valor del atributo netapa, la ciudad de salida y la ciudad de
 llegada de las etapas de más de 190 km y que tengan por lo menos dos
 puertos.*/
+SELECT e.netapa, e.salida, e.llegada
+FROM etapa e, puerto p
+WHERE e.netapa = p.netapa AND e.km>190
+GROUP BY e.netapa
+HAVING COUNT(p.netapa)>1;
 
 
 
 /*57. Obtener el dorsal y el nombre de los ciclistas que no han llevado todos los
 maillots que ha llevado el ciclista de dorsal 2.*/
-
+SELECT c.dorsal, c.nombre
+FROM llevar l, ciclista c
+WHERE l.codigo IN(SELECT l1.codigo
+                   FROM llevar l1
+                   WHERE l1.dorsal = 2)
+AND l.dorsal = c.dorsal
+GROUP BY c.dorsal, c.nombre
+HAVING COUNT(l.codigo)<2;/*SI FUERA QUE HA LLEVADO,
+CAMBIO EL COUNT(l.codigo)<2 POR COUNT(l.codigo)>2*/
 
 
 /*58. Obtener el dorsal y el nombre de los ciclistas que han llevado al menos un
 maillot de los que ha llevado el ciclista de dorsal 2.*/
+SELECT c.dorsal, c.nombre 
+FROM ciclista c, llevar l 
+WHERE c.dorsal = l.dorsal 
+AND l.codigo IN(SELECT l1.codigo
+               FROM llevar l1
+               WHERE l1.dorsal = 2)
+AND c.dorsal != 2
+GROUP BY c.dorsal, c.nombre
+HAVING COUNT(*)>=1;
 
 
 
 /*59. Obtener el dorsal y el nombre de los ciclistas que no han llevado ningún
 maillot de los que ha llevado el ciclista de dorsal 2.*/
 
-
+/*NO VA*/
+SELECT c.dorsal, c.nombre
+FROM ciclista c, llevar l 
+WHERE c.dorsal = l.dorsal
+AND l.codigo NOT IN(SELECT l1.codigo
+                   FROM llevar l1 
+                   WHERE l1.dorsal = 2)
+GROUP BY c.dorsal, c.nombre;
 
 
 /*60. Obtener el dorsal y nombre de los ciclistas que han llevado exactamente los
 mismos maillots que ha llevado el ciclista de dorsal 1.*/
+SELECT c.dorsal, c.nombre
+FROM ciclista c, llevar l 
+WHERE l.dorsal = c.dorsal
+AND l.codigo IN(SELECT l1.codigo
+               FROM llevar l1
+               WHERE l1.dorsal = 1
+               GROUP BY l1.codigo
+               HAVING COUNT(l1.codigo)=COUNT(l.codigo))
+GROUP BY c.dorsal, c.nombre;
 
 
 /*61. Obtener el dorsal y el nombre del ciclista que ha llevado durante más
 kilómetros un mismo maillot e indicar también el color de dicho maillot.*/
 
-
+SELECT c.dorsal, c.nombre, m.color
+FROM ciclista c, llevar l, etapa e, 
+maillot m 
+WHERE l.dorsal = c.dorsal 
+AND l.codigo = m.codigo
+AND l.netapa = e.netapa
+GROUP BY c.dorsal, c.nombre
+HAVING MAX(e.km)
+LIMIT 1;
 
 /*62. Obtener el dorsal y el nombre de los ciclistas que han llevado dos tipos de
 maillot menos de los que ha llevado el ciclista de dorsal 3.*/
-
+SELECT c.dorsal, c.nombre
+FROM ciclista c, llevar l 
+WHERE c.dorsal = l.dorsal 
+AND l.codigo IN(SELECT l1.codigo
+               FROM llevar l1 
+               WHERE l1.dorsal = 3)
+AND c.dorsal!=3
+GROUP BY c.dorsal, c.nombre
+HAVING COUNT(l.dorsal)-2;
 
 
 /*63. Obtener el valor del atributo netapa y los km de las etapas que tienen
 puertos de montaña.*/
-
-
-
+SELECT e.netapa, e.km
+FROM etapa e , puerto p 
+WHERE e.netapa = p.netapa
+GROUP BY e.netapa, e.km;
 
 
 /*insertar en un select into un select
@@ -600,3 +777,21 @@ de dos formas diferentes.*/
 /*4-Obtener la media de las ventas de cada región ordenando por región.
 Nota: hay que definir lo que significa “media de ventas de una región”?
 */
+
+
+
+/*DUDAS:
+- Como hacer el 40 de otra forma
+- No se porque no me sale de la otra forma el ejercicio 43
+- 46. No estoy seguro
+- 47.
+- 59. NO ME SALE*/
+
+
+
+
+/*ejercicios importantes:
+- 35 (anterior etapa, menos la 0 ya que no se puede restar)
+- 38 (en el que suma los puertos agrupandolos antes de compararlos
+- 40 (asi se seleccionan los puertos con más altura)
+- hacer update y set de un select*/
