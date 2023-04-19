@@ -77,8 +77,6 @@ INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento,salar
 INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento, salario) VALUES(1,"Manolo","Jimenez","Vega","4534534A",'1997-13-07',4334);
 INSERT INTO empleado(codigo,nombre,apellido1,apellido2,dni,fechaNacimiento, salario) VALUES(1,"Manolo","Jimenez","Vega","4534534A",'1986-10-10',4334);
 
-
-
 /*
 3) Borrar algún empleado, algún departamento, algún proyecto.
    ¿Hay alguna incoherencia con las tuplas de la tabla 'Participa'.

@@ -590,11 +590,16 @@ HAVING COUNT(*)>3 AND AVG(c.edad)<=30;
 
 
 /*52. Obtener el nombre de los ciclistas que pertenezcan a un equipo que tenga más de cinco corredores y que hayan ganado alguna etapa indicando cuántas etapas ha ganado.*/
-SELECT c.nomeq, c.nombre, COUNT(e.netapa)
-FROM ciclista c, etapa e 
-WHERE c.dorsal = e.dorsal
-GROUP BY c.nomeq
-HAVING COUNT(c.nombre)>5;
+
+SELECT DISTINCT c.nombre
+FROM ciclista c, equipo e
+WHERE c.nomeq = e.nomeq
+AND e.nomeq IN(SELECT e1.nomeq
+FROM equipo e1, ciclista c1
+WHERE e1.nomeq = c1.nomeq
+GROUP BY c1.nomeq 
+HAVING COUNT(c1.dorsal)>5)AND c.dorsal IN(SELECT dorsal
+FROM etapa);
 
 
 /*53. Obtener el nombre de los equipos y la edad media de sus ciclistas de
@@ -614,6 +619,7 @@ WHERE c.dorsal = l.dorsal AND c.nomeq = e.nomeq
 GROUP BY c.nomeq
 ORDER BY COUNT(l.codigo) DESC
 LIMIT 1;
+
 
 
 /*55. Obtener el código y el color del maillot que ha sido llevado por algún ciclista
