@@ -183,6 +183,15 @@ ck_fec_cap CHECK(fecha NOT BETWEEN '%21/06' AND '%/21/09');
 /*3. Muestra los caladeros en los que se han capturado más de 1000 kilos de pescado azul en los últimos
 tres meses.*/
 
+
+SELECT c.CodCaladeros 
+FROM capturas c, especies e 
+WHERE c.CodEspecie = e.codigo 
+AND e.tipo="Pescado Azúl" 
+GROUP BY c.codCaladero 
+HAVING SUM(numKilos)>1000 
+AND YEAR(c.fecha)=YEAR(SYSDATE)
+
 SELECT c.nombre, e.codigo
 FROM caladeros c, capturas ca, especies e
 WHERE c.codigo = ca.codCaldero
@@ -214,64 +223,113 @@ SET KilosTotalesCapturados = (SELECT SUM(c.numKilos)
 /*5. Muestra el total de kilos vendidos de cada especie de marisco y el importe total de dichas ventas,
 incluyendo aquellas especies de las que no se ha vendido nada.*/
 
-SELECT e.tipo, SUM(l.numKilos), SUM(l.numKilos)* l.PPKS
-FROM lotes l RIGHT OUTER JOIN especies e ON(l.codEspecie = e.codigo)
-GROUP BY e.tipo;
+SELECT e.nombre, SUM(l.PPKS) * l.NumKilos
+FROM lotes l RIGHT JOIN especies e ON(l.codEspecie=e.codigo) 
+WHERE e.tipo = 'Marisco' GROUP BY e.nombre ORDER BY e.nombre DESC;
 
 
 
 /*6. Muestra los nombres de los barcos que han pescado marisco tanto en Enero como en Febrero como
 en Marzo.*/
 
-SELECT b.nombre
-FROM barcos b, capturas c
-WHERE b.matricula = c.matricula
-AND c.fecha LIKE'%01%' OR c.fecha LIKE'%03%' OR c.fecha LIKE'%02%';
+SELECT b.nombre, c.fecha
+FROM barcos b, capturas c, especies e 
+WHERE b.Matricula = c.matricula AND c.codEspecie = e.codigo
+GROUP BY b.nombre
+HAVING MONTH(c.fecha) BETWEEN 0 AND 4;
 
-SELECT b.nombre, c.fecha FROM barcos b, capturas c WHERE b.matricula = c.matricula AND (MONTH(c.fecha)>=1 AND MONTH(c.fecha)<=3)
+
+/*otra manera*/
+
+SELECT b.nombre, c.fecha FROM barcos b, capturas c 
+WHERE b.matricula = c.matricula AND (MONTH(c.fecha)>=1 AND MONTH(c.fecha)<=3)
+GROUP BY b.nombre;
 
 
 
 /*7. Crea una vista con el nombre de los barcos, el código del último lote que vendió, el nombre de la
 especie del lote y el dinero que ganaron en la operación.*/
 
+SELECT b.nombre, l.codigo, e.nombre, l.PPKS*l.NumKilos
+FROM barcos b, lotes l, especies e 
+WHERE b.matricula = l.matricula AND l.codEspecie=e.codigo AND l.codigo =(SELECT l1.codigo
+                                                                         FROM lotes l1
+                                                                         WHERE l1.matricula = b.matricula
+                                                                         ORDER BY l1.fechaVenta DESC 
+                                                                         LIMIT 1);
 
-
+/*SE PONE = EN VEZ DE IN PORQUE ESTÁ COMPARÁNDOLO CON UN ÚNICO VALOR*/
 
 
 /*8. Muestra los barcos que han capturado más de 1200 kilos de sardinas en el caladero llamado
 'Terranova'.*/
 
-
+SELECT b.nombre FROM barcos b, capturas c, caladeros ca, especies e 
+WHERE b.matricula = c.matricula AND c.codEspecie = e.codigo AND c.codcaladero = ca.codigo 
+AND ca.ubicacion = "Terranova" AND e.nombre ="Sardina"
+GROUP BY b.nombre 
+HAVING SUM(numkilos) >1200 
 
 
 
 /*9. Muestra los nombres de las especies ordenadas por número de kilos vendidos en Febrero.*/
 
-
+SELECT e.nombre
+FROM especies e, lotes l 
+WHERE e.codigo = l.codEspecie AND
+MONTH(l.fechaVenta)=2
+GROUP BY e.nombre
+ORDER BY SUM(l.numKilos) DESC;
 
 
 
 /*10. Muestra el nombre del barco que ha capturado más kilos de gambas en el caladero de 'Gran Sol'.*/
 
 
-
+SELECT b.nombre
+FROM barcos b, capturas c, caladeros ca, especies e 
+WHERE b.matricula = c.matricula AND c.codCaldero = ca.codigo
+AND c.codEspecie = e.codigo AND ca.nombre = 'Gran Sol'
+GROUP BY b.nombre
+ORDER BY SUM(c.numKilos)
+LIMIT 1;
 
 
 
 /*11. Muestra el nombre de los barcos que han superado el cupo de capturas de alguna especie.*/
 
-
+SELECT b.nombre, b.capacidad
+FROM barcos b, capturas c, especies e  
+WHERE b.matricula = c.matricula
+AND e.codigo = c.codEspecie
+GROUP BY b.nombre, e.codigo
+HAVING b.capacidad<SUM(c.numKilos)
+ORDER BY b.nombre DESC;
 
 
 
 /*12. Muestra el nombre del armador que ha ingresado más dinero por la venta de pescado de sus barcos.*/
 
-
+SELECT b.armador
+FROM barcos b, lotes l
+WHERE b.matricula = l.matricula
+GROUP BY b.armador
+ORDER BY SUM(l.numKilos)*l.PPKS DESC
+LIMIT 1;
 
 
 
 /*13. Muestra los barcos que han capturado más pescado de cada nacionalidad.*/
+
+SELECT b.nacionalidad, b.nombre 
+FROM barcos b, capturas c 
+WHERE b.matricula = c.matricula
+GROUP BY b.nacionalidad, b.nombre, c.matricula --si quiero usar en el having un valor tengo que agruparlo por ese valor para poner crear un grupo con el tambien
+HAVING c.matricula = (SELECT c2.matricula 
+                  FROM capturas c2 
+                  GROUP BY c2.matricula
+                  ORDER BY SUM(c2.numKilos)
+                  LIMIT 1);
 
 
 
@@ -281,3 +339,4 @@ para conseguir que los partidos que se juagaban hoy, pasen a jugarse el martes):
 
 UPDATE partidos SET fecha= NEXT_DAY(SYSDATE,'Martes')
 WHERE fecha=SYSDATE;
+
