@@ -1,0 +1,26 @@
+1.
+
+INSERT INTO (idCocina, idPlato) 
+VALUES ((SELECT idCocina FROM Cocinero ORDER BY añosServicio LIMIT 1), 
+(SELECT idPlato FROM plato p ORDER BY costo LIMIT 1)); 
+
+2.
+UPDATE Pedido
+SET ¿listo?=true
+WHERE (SELECT p.id
+	   FROM pedido p, incluye i, plato p1
+	   WHERE p.id = i.idPedido AND p1.id = i.idPlato
+	   AND ALL p1.¿listo?=true);
+
+
+3.
+SELECT p1.nombreYApellido
+FROM Pinche p, Empleado e, Persona p1
+WHERE p.id IN(SELECT c.idPinche
+			FROM Cocinero c, Cocina c1, Plato p
+			WHERE c.idCocinero = c1.idCocina 
+			AND c.idCocina = p.idPlato
+			AND p.nombre = 'Lentejas a la Riojana'
+			GROUP BY c.idPinche)
+AND p.id = e.id AND p1.id = e.id
+GROUP BY p.id;
