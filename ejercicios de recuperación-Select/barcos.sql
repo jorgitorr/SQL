@@ -223,7 +223,7 @@ SET KilosTotalesCapturados = (SELECT SUM(c.numKilos)
 /*5. Muestra el total de kilos vendidos de cada especie de marisco y el importe total de dichas ventas,
 incluyendo aquellas especies de las que no se ha vendido nada.*/
 
-SELECT e.nombre, SUM(l.PPKS) * l.NumKilos
+SELECT e.nombre, SUM(l.PPKS * l.NumKilos)
 FROM lotes l RIGHT JOIN especies e ON(l.codEspecie=e.codigo) 
 WHERE e.tipo = 'Marisco' GROUP BY e.nombre ORDER BY e.nombre DESC;
 
